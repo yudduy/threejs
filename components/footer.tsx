@@ -7,17 +7,17 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-white/60 text-sm">
-            © {new Date().getFullYear()} CHAEWON FUND. All rights reserved.
+            © {new Date().getFullYear()} NEXT GEN FUND. All rights reserved.
           </div>
           <div className="flex items-center gap-4">
             <Link 
-              href="mailto:contact@chaewonfund.com" 
+              href="mailto:contact@nextgenfund.com" 
               className="text-white/60 hover:text-white transition-colors"
             >
               <Mail className="w-5 h-5" />
             </Link>
             <Link 
-              href="https://linkedin.com/company/chaewonfund" 
+              href="https://linkedin.com/company/sequoia" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-white/60 hover:text-white transition-colors"

@@ -14,7 +14,7 @@ export default function Home() {
       </div>
       <Navbar />
       
-      {/* Hero Section */}
+      {/* Hero */}
       <section className="container mx-auto px-4 min-h-screen flex items-center justify-center text-center relative">
         <div className="max-w-2xl">
           <TypingAnimation text="The Future is within Chaewon." />
@@ -37,7 +37,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Specialization Section with Stats */}
+      {/* Stats */}
       <section className="container mx-auto px-4 py-24">
         <FadeIn>
           <Stats />
@@ -50,7 +50,7 @@ export default function Home() {
             </span>
           </h2>
           <p className="text-center text-white/60 max-w-3xl mx-auto text-lg">
-            college students in building the next generation of [startups]
+            college students in building the next generation of startups
           </p>
         </FadeIn>
       </section>

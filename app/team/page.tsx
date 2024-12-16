@@ -34,7 +34,7 @@ export default function Team() {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="grid grid-cols-2 gap-8"
           >
-            {/* Add team members here */}
+            {/* To add more */}
             <div className="text-center">
               <div className="w-32 h-32 rounded-full bg-purple-500 mx-auto mb-4"></div>
               <h3 className="text-xl font-bold text-white">Duy</h3>

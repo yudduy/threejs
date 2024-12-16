@@ -1,8 +1,8 @@
 {
-    "name": "vc-site",
+    "name": "NextGenFund",
     "version": "1.0.0",
-    "description": "Your project description",
-    "main": "index.js",
+    "description": "Next Gen Fund Website",
+    "main": "page.tsx",
     "scripts": {
         "dev": "next dev",
         "build": "next build",
