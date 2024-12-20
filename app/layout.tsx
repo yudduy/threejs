@@ -5,7 +5,7 @@ import 'app/global.css'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'VC Fund - Investing in AI & Crypto',
+  title: 'Axess Capital',
   description: 'A venture capital fund focused on artificial intelligence and blockchain technology',
 }
 

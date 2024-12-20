@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 
 export function Navbar() {
   const navItems = [
-    { name: 'Needs', path: '/needs' },
+    { name: 'About', path: '/about' },
     { name: 'Team', path: '/team' },
     { name: 'Portfolio', path: '/portfolio' },
     { name: 'Blog', path: '/blog' },
@@ -21,7 +21,7 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold text-white">
-          CHAEWON FUND
+          AXESS CAPITAL
         </Link>
         <div className="hidden md:flex items-center space-x-6">
           {navItems.map((item) => (

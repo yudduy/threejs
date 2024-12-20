@@ -7,7 +7,7 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div className="text-white/60 text-sm">
-            © {new Date().getFullYear()} NEXT GEN FUND. All rights reserved.
+            © {new Date().getFullYear()} AXESS CAPITAL. All rights reserved.
           </div>
           <div className="flex items-center gap-4">
             <Link 
@@ -17,7 +17,7 @@ export function Footer() {
               <Mail className="w-5 h-5" />
             </Link>
             <Link 
-              href="https://linkedin.com/company/sequoia" 
+              href="https://linkedin.com/company/axesscapital" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-white/60 hover:text-white transition-colors"

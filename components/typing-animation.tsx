@@ -25,12 +25,12 @@ export function TypingAnimation({ text }: { text: string }) {
       ref={scope}
       className="relative"
     >
-      <span className="text-5xl md:text-6xl font-bold leading-tight text-white">
+      <span className="text-5xl md:text-6xl font-serif leading-tight text-white">
         {displayText}
       </span>
       <motion.span
-        className="inline-block w-[3px] h-[1em] bg-white ml-1 align-middle"
-        animate={{ opacity: [2, 0] }}
+        className="inline-block w-[0.6em] h-[1em] bg-white ml-1 align-middle"
+        animate={{ opacity: [1, 0] }}
         transition={{ duration: 0.5, repeat: Infinity }}
       />
     </motion.div>

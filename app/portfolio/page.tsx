@@ -3,32 +3,32 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Navbar } from '../../components/navbar';
-import { Footer } from '../../components/footer'
+import { Footer } from '../../components/Footer'
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../components/ui/tabs'
 
 const AI_COMPANIES = [
   {
     name: 'Startup 1',
     logo: '/placeholder.svg?height=100&width=200',
-    description: 'description 1',
+    description: 'Description 1',
     color: '#4F46E5'
   },
   {
     name: 'Startup 2',
     logo: '/placeholder.svg?height=100&width=200',
-    description: 'description 2',
+    description: 'Description 2',
     color: '#7C3AED'
   },
   {
     name: 'Startup 3',
     logo: '/placeholder.svg?height=100&width=200',
-    description: 'descriptin 3',
+    description: 'Description 3',
     color: '#2563EB'
   },
   {
     name: 'Startup 4',
     logo: '/placeholder.svg?height=100&width=200',
-    description: 'description 4',
+    description: 'Description 4',
     color: '#059669'
   },
 ]
@@ -62,27 +62,40 @@ const CRYPTO_COMPANIES = [
 
 export default function Portfolio() {
   const [category, setCategory] = useState('ai')
-
   return (
-    <div className="min-h-screen overflow-hidden">
+    <div className="min-h-screen overflow-hidden bg-galaxy">
       <div className="space-bg">
-        <div className="stars" />
-        <div className="shooting-star" />
-        <div className="shooting-star" />
-        <div className="shooting-star" />
+        <div className="stars" style={{ top: 0 }} /> 
         <div className="grid-bg" />
+        {Array.from({ length: Math.floor(Math.random() * 15) + 1 }).map((_, index) => {
+          const randomLeft = Math.floor(Math.random() * 100);
+          const randomTop = Math.floor(Math.random() * 10); // Random top position
+          const randomAnimationDuration = crypto.getRandomValues(new Uint32Array(1))[0] % 3 + 2;
+          const randomRotation = crypto.getRandomValues(new Uint32Array(1))[0] % 360;
+
+          return (
+            <div
+              key={index}
+              className="shooting-star"
+              style={{
+                top: `-${randomTop}vh`, // Start just above the viewport
+                left: `${randomLeft}vw`,
+                animation: `shooting ${randomAnimationDuration + 2}s ease-out infinite`,
+                transform: `rotate(${randomRotation}deg)`
+              }}
+            />
+          );
+        })}
       </div>
-      
       <Navbar />
-      
       <main className="container mx-auto px-4 pt-32 pb-16">
         <motion.h1 
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-4xl font-bold text-white mb-12"
+          className="text-4xl font-bold text-white mb-12 font-serif"
         >
           Select Portfolio Companies
-        </motion.h1>
+        </motion.h1> {/* Added missing closing tag for motion.h1 */}
 
         <Tabs 
           defaultValue="ai" 
@@ -139,7 +152,7 @@ export default function Portfolio() {
         </Tabs>
       </main>
 
-        <Footer /> 
-      </div>
+      <Footer /> 
+    </div>
   )
 }

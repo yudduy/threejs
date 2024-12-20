@@ -2,16 +2,18 @@
 
 import { motion } from 'framer-motion';
 import { Navbar } from '../../components/navbar';
-import { Footer } from '../../components/footer';
+import { Footer } from '../../components/Footer';
 
 export default function Needs() {
   return (
     <div className="relative min-h-screen overflow-hidden">
       <div className="space-bg">
         <div className="stars" />
-        <div className="shooting-star" />
-        <div className="shooting-star" />
-        <div className="shooting-star" />
+        <div className="stars" /> 
+        <div className="stars" /> 
+        <div className="stars" /> 
+        <div className="stars" /> 
+        <div className="stars" /> 
         <div className="grid-bg" />
       </div>
       <Navbar />
@@ -23,8 +25,8 @@ export default function Needs() {
           transition={{ duration: 0.8 }}
           className="max-w-4xl mx-auto"
         >
-          <h1 className="text-7xl font-bold text-white tracking-wider mb-24 text-center">
-            The Needs
+          <h1 className="text-7xl font-serif font-bold text-white tracking-wider mb-24 text-center"> {/* Changed to serif font */}
+            About
           </h1>
           
           <motion.div
@@ -33,19 +35,15 @@ export default function Needs() {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="prose prose-lg prose-invert mx-auto"
           >
-            <p className="text-white/80 text-xl leading-relaxed">
-            We are a group of Stanford students supporting Stanford founders through venture. We leverage insider access to top talent and projects through clubs such as Stanford Blockchain Club, ASES, TreeHacks, BASES, and SMT. We focus on pre-seed startups in blockchain and AI, and we plan to get involved in teams earlier than other seed investors. Once we invest, we expect to be actively involved by bringing not only on-campus talent to the companies but also global partners.
+            <p className="text-white text-xl leading-relaxed">
+            We invest in Stanford startups building the future of blockchain and AI. We focus on pre-seed investments, partnering early to provide capital, technical expertise, and connections to global resources and top talent. We are committed to backing transformative companies starting with the Stanford community.
             </p>
             
-            <p className="text-white/80 text-xl leading-relaxed mt-8">
-              We've identified a critical need in the market: bridging the gap between cutting-edge technology and practical business applications. Many brilliant innovations in AI and crypto remain untapped, while countless businesses struggle to harness these technologies effectively. This disconnect represents both a challenge and an opportunity.
-            </p>
-
-            <p className="text-white/80 text-xl leading-relaxed mt-8">
-              Our mission is to identify, support, and scale ventures that are building this bridge. We're not just investing in companies; we're investing in the infrastructure of tomorrow's digital economy. Through strategic capital deployment and hands-on guidance, we're helping visionary founders transform theoretical possibilities into practical solutions that drive real-world impact.
+            <p className="text-white text-xl leading-relaxed mt-8">
+            Our team consists of Stanford students deeply embedded in the entrepreneurial ecosystem, with leadership roles in TreeHacks, Stanford Blockchain Club, Stanford Blockchain Review, and Affiliated Students Entrepreneurship Club (ASES). This insider access enables us to identify and support exceptional founders before they reach the broader venture community.
             </p>
           </motion.div>
-        </motion.div>
+        </motion.div> 
       </main>
 
       <Footer />
