@@ -1,4 +1,4 @@
-// File: /Users/duy/Documents/external_project/vc-site/app/layout.tsx
+// File: /Users/duy/Documents/external_project/axess-beta/app/layout.tsx
 import * as entry from '../../../app/layout.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
