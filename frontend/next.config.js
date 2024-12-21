@@ -9,11 +9,11 @@ const nextConfig = {
         return config;
     },
 
-    // Add any custom headers or rewrites if necessary
+    // Add any custom headers if necessary
     async headers() {
         return [
             {
-                source: '/(.*)',
+                source: '/(.*)',  // This matches all routes
                 headers: [
                     {
                         key: 'X-Custom-Header',
@@ -23,22 +23,27 @@ const nextConfig = {
             },
         ];
     },
-
-    experimental: {
-    },
-
+    
+    // Rewrites to route API calls to the backend server
     async rewrites() {
         return [
+            // This ensures that API requests are forwarded to the backend
             {
                 source: '/api/:path*',
-                destination: process.env.NEXT_PUBLIC_BACKEND_URL + '/api/:path*'
-            }
-        ]
+                destination: `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/:path*`,
+            },
+        ];
     },
 
+    // Environment Variables
     env: {
         NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL
-    }
+    },
+
+    // You can include experimental features if needed
+    experimental: {
+        // exampleFeature: true,  // Example of experimental feature
+    },
 };
 
 module.exports = nextConfig;
