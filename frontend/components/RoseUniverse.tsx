@@ -538,7 +538,9 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
     setSubmitStatus({ type: null, message: '' })
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001'}/api/contact`, {
+      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
+      console.log('Backend URL:', backendUrl); // Debugging line to check the URL
+      const response = await fetch(`${backendUrl}/api/contact`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

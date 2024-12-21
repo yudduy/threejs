@@ -31,13 +31,15 @@
         "name": "next"
       }
     ],
-    "target": "ES2017"
+    "target": "ES2017",
+    "typeRoots": ["./node_modules/@types", "./@types"]
   },
   "include": [
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "@types/**/*.d.ts" 
   ],
   "exclude": [
     "node_modules"

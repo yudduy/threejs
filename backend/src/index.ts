@@ -8,7 +8,6 @@ dotenv.config()
 
 const app = express()
 
-// Update CORS configuration for production
 const allowedOrigins = [
   'https://axess.vc',
   'http://localhost:3000',
