@@ -1,1 +1,1 @@
-self.__REACT_LOADABLE_MANIFEST='{"app/page.tsx -> @/components/RoseUniverse":{"id":9968,"files":["static/chunks/b536a0f1.a98e9c2d2f657f12.js","static/chunks/bd904a5c.b9e2b06c12559477.js","static/chunks/c15bf2b0.62ae94e55114ecfa.js","static/chunks/930.bac51555fb2b80e5.js","static/chunks/968.45bd2bc8b6b79104.js"]}}';
+self.__REACT_LOADABLE_MANIFEST="{\"app/page.tsx -> @/components/RoseUniverse\":{\"id\":\"app/page.tsx -> @/components/RoseUniverse\",\"files\":[\"static/chunks/_app-pages-browser_components_RoseUniverse_tsx.js\"]}}"
