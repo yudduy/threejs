@@ -14,8 +14,14 @@ interface RoseUniverseProps {
   onAnimationComplete: () => void;
 }
 
-// Add these shape generation functions at the top of the component:
-const generateShapes = {
+// Add this type definition at the top of the file, after imports
+type ShapeType = 'galaxy' | 'donut' | 'dna' | 'bitcoin' | 'robot' | 'smiley' | 's' | 'infinity' | 'tree';
+
+// Update the shapes array to be explicitly typed
+const shapes: ShapeType[] = ['galaxy', 'donut', 'dna', 'bitcoin', 'robot', 'smiley', 's', 'infinity', 'tree'];
+
+// Update the generateShapes object type
+const generateShapes: Record<ShapeType, (particleCount: number, randomValues: Float32Array) => Float32Array> = {
   galaxy: (particleCount: number, randomValues: Float32Array) => {
     const positions = new Float32Array(particleCount * 3)
     for (let i = 0; i < particleCount; i++) {
@@ -277,7 +283,6 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
   const textMode = useRef<boolean>(true)
   const lastTextChange = useRef<number>(0)
   const currentShape = useRef<string>('galaxy')
-  const shapes = ['galaxy', 'donut', 'dna', 'bitcoin', 'robot', 'smiley', 's', 'infinity', 'tree']
   const shapeIndex = useRef(0)
   const [showContactForm, setShowContactForm] = useState(false)
   const [formData, setFormData] = useState<ContactFormData>({
@@ -455,7 +460,7 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
             // Start shape rotation interval
             setInterval(() => {
               shapeIndex.current = (shapeIndex.current + 1) % shapes.length;
-              const nextShape = shapes[shapeIndex.current];
+              const nextShape = shapes[shapeIndex.current] as ShapeType;
               const nextPositions = generateShapes[nextShape](particleCount, randomValues);
               
               gsap.to(galaxyPositions, {

@@ -1,5 +1,5 @@
 {
-    "name": "axessvc",
+    "name": "axess-frontend",
     "version": "1.0.0",
     "description": "Axess VC Website",
     "main": "page.tsx",
