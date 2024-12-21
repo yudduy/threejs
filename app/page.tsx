@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { RoseUniverse } from '@/components/RoseUniverse'
 import { Navbar } from '@/components/navbar'
-import { Footer } from '@/components/Footer' 
+import { Footer } from '@/components/footer' 
 
 export default function Home() {
   const [showRoseUniverse, setShowRoseUniverse] = useState(true)

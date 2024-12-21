@@ -142,7 +142,7 @@ function RoseUniverseComponent({ onAnimationComplete }: RoseUniverseProps) {
       0.1,
       2000 
     )
-    camera.position.z = 500
+    camera.position.z = 700
     
     const renderer = new THREE.WebGLRenderer({ 
       alpha: true, 

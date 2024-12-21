@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Navbar } from '../../components/navbar'
-import { Footer } from '../../components/footer'
+import { Footer } from '../../components/Footer'
 
 export default function Team() {
   return (
@@ -37,23 +37,23 @@ export default function Team() {
             {/* To add more */}
             <div className="text-center">
               <div className="w-32 h-32 rounded-full bg-purple-500 mx-auto mb-4"></div>
-              <h3 className="text-xl font-bold text-white">Duy</h3>
-              <p className="text-white/60">Cofounder - CEO</p>
+              <h3 className="text-xl font-bold text-white">Joshua Koo</h3>
+              <p className="text-white/60">Korean</p>
             </div>
             <div className="text-center">
               <div className="w-32 h-32 rounded-full bg-blue-500 mx-auto mb-4"></div>
-              <h3 className="text-xl font-bold text-white">Duy</h3>
-              <p className="text-white/60">CTO</p>
+              <h3 className="text-xl font-bold text-white">Emily Han</h3>
+              <p className="text-white/60">Japanese</p>
             </div>
             <div className="text-center">
               <div className="w-32 h-32 rounded-full bg-green-500 mx-auto mb-4"></div>
-              <h3 className="text-xl font-bold text-white">Duy</h3>
-              <p className="text-white/60">Managing Partner</p>
+              <h3 className="text-xl font-bold text-white">Tesvara Jiang</h3>
+              <p className="text-white/60">Asian</p>
             </div>
             <div className="text-center">
               <div className="w-32 h-32 rounded-full bg-red-500 mx-auto mb-4"></div>
-              <h3 className="text-xl font-bold text-white">Duy</h3>
-              <p className="text-white/60">Managing Partner 2</p>
+              <h3 className="text-xl font-bold text-white">Duy Nguyen</h3>
+              <p className="text-white/60">Asian</p>
             </div>
           </motion.div>
         </motion.div>
