@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST="{\"app/page.tsx -> @/components/RoseUniverse\":{\"id\":\"app/page.tsx -> @/components/RoseUniverse\",\"files\":[\"static/chunks/_app-pages-browser_components_RoseUniverse_tsx.js\"]}}"
