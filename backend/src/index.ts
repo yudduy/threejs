@@ -55,7 +55,7 @@ const contactPost = async (req: Request, res: Response) => {
 
     const mailOptions = {
       from: process.env.EMAIL_USER,
-      to: 'kduynguy@gmail.com',
+      to: 'duy@axess.vc',
       subject: 'New Contact Form Submission - Axess Capital',
       text: `New message from contact form:\n\nEmail: ${email}\nMessage: ${message}`,
       html: `

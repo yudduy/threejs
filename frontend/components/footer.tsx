@@ -11,13 +11,13 @@ export function Footer() {
           </div>
           <div className="flex items-center gap-4">
             <Link 
-              href="mailto:contact@nextgenfund.com" 
+              href="mailto:duy@axess.vc" 
               className="text-white/60 hover:text-white transition-colors"
             >
               <Mail className="w-5 h-5" />
             </Link>
             <Link 
-              href="https://linkedin.com/company/axesscapital" 
+              href="https://linkedin.com/company/axess-vc/" 
               target="_blank" 
               rel="noopener noreferrer" 
               className="text-white/60 hover:text-white transition-colors"
