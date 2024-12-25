@@ -13,6 +13,11 @@ const allowedOrigins = [
   process.env.FRONTEND_URL
 ].filter(Boolean)
 
+app.use((req, res, next) => {
+  res.setHeader('Content-Type', 'application/json')
+  next()
+})
+
 app.use(cors({
   origin: (origin: string | undefined, callback: (error: Error | null, success?: boolean) => void) => {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -23,7 +28,7 @@ app.use(cors({
   },
   credentials: true,
   methods: ['POST', 'GET', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
 }))
 
 app.use(express.json())
@@ -68,6 +73,10 @@ app.post('/api/contact', async (req: Request, res: Response) => {
     console.error('Server error:', error)
     return res.status(500).json({ error: 'Internal server error' })
   }
+})
+
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'healthy', timestamp: new Date().toISOString() })
 })
 
 // For local development
