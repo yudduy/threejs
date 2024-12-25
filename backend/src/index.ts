@@ -7,29 +7,19 @@ dotenv.config()
 
 const app = express()
 
-const allowedOrigins = [
-  'https://axess.vc',
-  'http://localhost:3000',
-  process.env.FRONTEND_URL
-].filter(Boolean)
-
 app.use((req, res, next) => {
-  res.setHeader('Content-Type', 'application/json')
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept')
+  res.header('Content-Type', 'application/json')
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end()
+  }
   next()
 })
 
-app.use(cors({
-  origin: (origin: string | undefined, callback: (error: Error | null, success?: boolean) => void) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
-  credentials: true,
-  methods: ['POST', 'GET', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
-}))
+app.use(cors())
 
 app.use(express.json())
 
@@ -48,10 +38,14 @@ const transporter = nodemailer.createTransport({
 
 app.post('/api/contact', async (req: Request, res: Response) => {
   try {
+    console.log('Received contact request:', req.body)
     const { email, message } = req.body
 
     if (!email || !message) {
-      return res.status(400).json({ error: 'Email and message are required' })
+      return res.status(400).json({ 
+        error: 'Validation failed',
+        details: 'Email and message are required' 
+      })
     }
 
     const mailOptions = {
@@ -68,15 +62,24 @@ app.post('/api/contact', async (req: Request, res: Response) => {
 
     await transporter.sendMail(mailOptions)
     console.log('Email sent successfully')
-    return res.status(200).json({ message: 'Contact form submitted successfully' })
+    return res.status(200).json({ 
+      success: true,
+      message: 'Contact form submitted successfully' 
+    })
   } catch (error) {
     console.error('Server error:', error)
-    return res.status(500).json({ error: 'Internal server error' })
+    return res.status(500).json({ 
+      error: 'Internal server error',
+      details: error instanceof Error ? error.message : 'Unknown error'
+    })
   }
 })
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'healthy', timestamp: new Date().toISOString() })
+  res.json({ 
+    status: 'healthy', 
+    timestamp: new Date().toISOString() 
+  })
 })
 
 // For local development

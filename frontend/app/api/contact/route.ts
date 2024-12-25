@@ -3,42 +3,49 @@ import { NextResponse } from 'next/server'
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001'
+    
+    // Use the same domain for API calls in production
+    const backendUrl = process.env.NODE_ENV === 'production' 
+      ? `https://${request.headers.get('host')}`
+      : process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001'
+    
     const endpoint = `${backendUrl}/api/contact`
-    
     console.log('Sending request to:', endpoint)
-    
+
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Origin': backendUrl
       },
       body: JSON.stringify(body),
     })
 
-    // Log response headers for debugging
-    console.log('Response headers:', Object.fromEntries(response.headers.entries()))
+    // Log for debugging
     console.log('Response status:', response.status)
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()))
 
+    let data
     const contentType = response.headers.get('content-type')
-    if (!contentType || !contentType.includes('application/json')) {
-      console.error('Invalid content type:', contentType)
+
+    try {
+      // Try to parse as JSON first
+      data = await response.json()
+    } catch (parseError) {
+      // If JSON parsing fails, get the response as text
       const text = await response.text()
-      console.error('Response body:', text)
+      console.error('Failed to parse response:', text)
       return NextResponse.json(
         { 
           error: 'Invalid server response',
-          details: 'Server did not return JSON'
+          details: 'Server returned invalid JSON'
         },
         { status: 502 }
       )
     }
 
-    const data = await response.json()
-    
     if (!response.ok) {
-      console.error('Server error response:', data)
       return NextResponse.json(
         { 
           error: data.error || 'Server error occurred',
