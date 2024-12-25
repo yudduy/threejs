@@ -1,12 +1,13 @@
 'use client'
 
-import { useEffect, useRef, useState, FormEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { motion } from 'framer-motion'
 import { TypingAnimation } from './typing-animation'
 import { createTextGeometry } from './textGeometry'
+import { ContactForm } from './ContactForm'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -266,33 +267,15 @@ const generateShapes: Record<ShapeType, (particleCount: number, randomValues: Fl
   }
 }
 
-interface ContactFormData {
-  email: string;
-  message: string;
-}
-
 function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const mousePosition = useRef({ x: 0, y: 0 })
   const sceneRef = useRef<THREE.Scene | null>(null)
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
   const geometryRef = useRef<THREE.BufferGeometry | null>(null)
-  const [currentSection, setCurrentSection] = useState(0)
   const [showWelcomeText, setShowWelcomeText] = useState(false)
-  const [currentText, setCurrentText] = useState({ opacity: 1 });
-  const textMode = useRef<boolean>(true)
-  const lastTextChange = useRef<number>(0)
-  const currentShape = useRef<string>('galaxy')
-  const shapeIndex = useRef(0)
   const [showContactForm, setShowContactForm] = useState(false)
-  const [formData, setFormData] = useState<ContactFormData>({
-    email: '',
-    message: ''
-  })
-  const [submitStatus, setSubmitStatus] = useState<{
-    type: 'success' | 'error' | null;
-    message: string;
-  }>({ type: null, message: '' })
+  const shapeIndex = useRef(0);
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -309,6 +292,7 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
     camera.position.z = 400 
     
     const renderer = new THREE.WebGLRenderer({ 
+      
       alpha: true, 
       antialias: true,
       powerPreference: "high-performance"
@@ -530,49 +514,6 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
     }
   }, [onAnimationComplete])
 
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-    setLoading(true);
-    setSubmitStatus({ type: null, message: '' })
-
-    try {
-      const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5001';
-      console.log('Backend URL:', backendUrl); // Debugging line to check the URL
-      const response = await fetch(`${backendUrl}/api/contact`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-        credentials: 'include', // Important for CORS
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to submit form')
-      }
-
-      const data = await response.json()
-      setSubmitStatus({ 
-        type: 'success', 
-        message: 'Thank you for your message! We\'ll be in touch soon.' 
-      })
-      setFormData({ email: '', message: '' }) // Reset form
-      setTimeout(() => setShowContactForm(false), 3000) // Hide form after 3 seconds
-
-    } catch (error) {
-      console.error('Contact form error:', error)
-      setSubmitStatus({ 
-        type: 'error', 
-        message: 'Failed to send message. Please try again later.' 
-      })
-    } finally {
-      setLoading(false); // Ensure loading state is reset
-    }
-  }
-
   return ( 
     <>
       <div ref={containerRef} className="fixed inset-0 z-0 bg-black" />
@@ -591,58 +532,19 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
               </p>
               <div className="flex justify-center">
                 <motion.div
-                  className="mt-4 text-lg font-semibold text-white cursor-pointer" // Added cursor-pointer class
-                  whileHover={{ scale: 1.1, textShadow: "0px 0px 8px rgba(255, 255, 255, 0.8)", boxShadow: "0px 0px 20px rgba(255, 255, 255, 0.8)" }}
-                  onClick={() => setShowContactForm(true)} // Show contact form on click
+                  className="mt-4 text-lg font-semibold text-white cursor-pointer"
+                  whileHover={{ 
+                    scale: 1.1, 
+                    textShadow: "0px 0px 8px rgba(255, 255, 255, 0.8)", 
+                    boxShadow: "0px 0px 20px rgba(255, 255, 255, 0.8)" 
+                  }}
+                  onClick={() => setShowContactForm(true)}
                 >
                   Curious? Contact Us!
                 </motion.div>
               </div>
 
-              {showContactForm && ( // Conditional rendering of the contact form
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: .1 }}
-                  className="bg-white/10 backdrop-blur-md p-6 rounded-lg w-80 border border-white/20"
-                >
-                  <form onSubmit={handleSubmit} className="space-y-3">
-                    <input
-                      type="email"
-                      placeholder="Your email"
-                      value={formData.email}
-                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                      required
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
-                    />
-                    <textarea
-                      placeholder="Your message"
-                      value={formData.message}
-                      onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-                      required
-                      rows={2}
-                      className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
-                    />
-                    <button
-                      type="submit"
-                      className="w-full bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg text-sm transition-all duration-300"
-                    >
-                      Connect with us
-                    </button>
-                    {submitStatus.type && (
-                      <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className={`text-sm ${
-                          submitStatus.type === 'success' ? 'text-green-400' : 'text-red-400'
-                        }`}
-                      >
-                        {submitStatus.message}
-                      </motion.p>
-                    )}
-                  </form>
-                </motion.div>
-              )}
+              {showContactForm && <ContactForm onClose={() => setShowContactForm(false)} />}
             </motion.div>
           </div>
         </div>
