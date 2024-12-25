@@ -45,7 +45,7 @@ export async function POST(req: Request, res: Response) {
 
     } catch (fetchError) {
       console.error('Backend server error:', fetchError);
-      return res.status(503).json({ error: 'Unable to reach backend server. Please try again later.' });
+      return res.status(503).json({ error: 'Unable to reach backend server. Please contact us at duy@axess.vc.' });
     }
 
   } catch (error) {

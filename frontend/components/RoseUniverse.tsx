@@ -8,6 +8,7 @@ import { motion } from 'framer-motion'
 import { TypingAnimation } from './typing-animation'
 import { createTextGeometry } from './textGeometry'
 import { ContactForm } from './ContactForm'
+import { Navbar } from './navbar'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -15,63 +16,106 @@ interface RoseUniverseProps {
   onAnimationComplete: () => void;
 }
 
-// Add this type definition at the top of the file, after imports
-type ShapeType = 'galaxy' | 'donut' | 'dna' | 'bitcoin' | 'robot' | 'smiley' | 's' | 'infinity' | 'tree';
+// Update ShapeType definition
+type ShapeType = 'galaxy' | 'blockchain' | 'neuralNetwork' | 'quantum' | 'infinity' | 'AXESS' | 's';
 
-// Update the shapes array to be explicitly typed
-const shapes: ShapeType[] = ['galaxy', 'donut', 'dna', 'bitcoin', 'robot', 'smiley', 's', 'infinity', 'tree'];
+// Update shapes array
+const shapes: ShapeType[] = ['galaxy', 'blockchain', 'neuralNetwork', 'quantum', 'infinity'];
 
 // Update the generateShapes object type
 const generateShapes: Record<ShapeType, (particleCount: number, randomValues: Float32Array) => Float32Array> = {
+  AXESS: (particleCount: number, randomValues: Float32Array) => {
+    const positions = createTextGeometry('AXESS', particleCount)
+    
+    // Scale the text positions without adding circular formation
+    for (let i = 0; i < particleCount; i++) {
+      const ix = i * 3
+      positions[ix] *= 9      // Scale X
+      positions[ix + 1] *= 9  // Scale Y
+      positions[ix + 2] *= 9  // Scale Z
+    }
+    
+    return positions
+  },
+  
   galaxy: (particleCount: number, randomValues: Float32Array) => {
     const positions = new Float32Array(particleCount * 3)
     for (let i = 0; i < particleCount; i++) {
-      const radius = randomValues[i * 3] * 400 + (randomValues[i * 3 + 1] * 200) 
+      const radius = randomValues[i * 3] * 800 + (randomValues[i * 3 + 1] * 400) // Increased spread
       const theta = randomValues[i * 3 + 2] * Math.PI * 2
       const phi = randomValues[i * 3 + 3] * Math.PI * 2
-      const spiral = randomValues[i * 3 + 4] * 125
+      const spiral = randomValues[i * 3 + 4] * 250 // More pronounced spiral
       
-      positions[i * 3] = (radius * Math.sin(phi) * Math.cos(theta)) + (spiral * Math.cos(theta)) // Centered
-      positions[i * 3 + 1] = (radius * Math.sin(phi) * Math.sin(theta)) + (spiral * Math.sin(theta)) // Centered
-      positions[i * 3 + 2] = radius * Math.cos(phi) * randomValues[i * 3 + 5]
+      positions[i * 3] = (radius * Math.sin(phi) * Math.cos(theta)) + (spiral * Math.cos(theta))
+      positions[i * 3 + 1] = (radius * Math.sin(phi) * Math.sin(theta)) + (spiral * Math.sin(theta))
+      positions[i * 3 + 2] = radius * Math.cos(phi) * 0.3 // More particles near camera
     }
     return positions
   },
   
-  donut: (particleCount: number, randomValues: Float32Array) => {
+  blockchain: (particleCount: number, randomValues: Float32Array) => {
     const positions = new Float32Array(particleCount * 3)
-    const radius = 200
-    const tubeRadius = 100
+    const radius = 450 // Increased size
+    const layers = 5
     
     for (let i = 0; i < particleCount; i++) {
-      const theta = randomValues[i * 3] * Math.PI * 2
-      const phi = randomValues[i * 3 + 1] * Math.PI * 2
-      const scatter = randomValues[i * 3 + 2] * 100 - 50
+      const layer = Math.floor(i / (particleCount / layers))
+      const layerOffset = layer * (radius / 2)
+      const angle = (i * 137.5) * Math.PI / 180
+      const spread = randomValues[i * 3] * 200 // Added spread
       
-      const x = (radius + tubeRadius * Math.cos(phi)) * Math.cos(theta) + scatter // Centered
-      const y = (radius + tubeRadius * Math.cos(phi)) * Math.sin(theta) + scatter // Centered
-      const z = tubeRadius * Math.sin(phi) + scatter
-      
-      positions[i * 3] = x
-      positions[i * 3 + 1] = y
-      positions[i * 3 + 2] = z
+      positions[i * 3] = (radius + spread) * Math.cos(angle)
+      positions[i * 3 + 1] = (radius + spread) * Math.sin(angle)
+      positions[i * 3 + 2] = layerOffset - radius // Brings particles closer to camera
     }
     return positions
   },
   
-  dna: (particleCount: number, randomValues: Float32Array) => {
+  neuralNetwork: (particleCount: number, randomValues: Float32Array) => {
     const positions = new Float32Array(particleCount * 3)
-    const radius = 200
-    const height = 400
+    const layers = 4
+    const nodesPerLayer = Math.floor(particleCount / layers)
     
     for (let i = 0; i < particleCount; i++) {
-      const t = (i / particleCount) * height
-      const theta = (t / 40) * Math.PI * 2 
-      const scatter = randomValues[i * 3] * 100 - 50
+      const layer = Math.floor(i / nodesPerLayer)
+      const spread = 500 // Increased spread
       
-      positions[i * 3] = radius * Math.cos(theta) + scatter // Centered
-      positions[i * 3 + 1] = t - height / 2 + scatter // Centered
-      positions[i * 3 + 2] = radius * Math.sin(theta) + scatter
+      positions[i * 3] = (randomValues[i * 3] - 0.5) * spread
+      positions[i * 3 + 1] = (layer / (layers - 1) - 0.5) * spread
+      positions[i * 3 + 2] = (randomValues[i * 3 + 2] - 0.5) * (spread * 0.3) // Closer to camera
+    }
+    return positions
+  },
+
+  quantum: (particleCount: number, randomValues: Float32Array) => {
+    const positions = new Float32Array(particleCount * 3)
+    const radius = 300 
+    
+    for (let i = 0; i < particleCount; i++) {
+      const t = i / particleCount
+      const spiral = t * 20 * Math.PI
+      const elevation = Math.cos(t * Math.PI * 8) * radius * 0.5
+      
+      positions[i * 3] = radius * Math.cos(spiral) + (randomValues[i * 3] - 0.5) * 200
+      positions[i * 3 + 1] = radius * Math.sin(spiral) + (randomValues[i * 3 + 1] - 0.5) * 200
+      positions[i * 3 + 2] = elevation + (randomValues[i * 3 + 2] - 0.5) * 100
+    }
+    return positions
+  },
+
+  infinity: (particleCount: number, randomValues: Float32Array) => {
+    const positions = new Float32Array(particleCount * 3)
+    const size = 800 // Increased size
+    
+    for (let i = 0; i < particleCount; i++) {
+      const t = i / particleCount * Math.PI * 2
+      const spread = randomValues[i * 3] * 200
+      
+      const a = size / 2
+      const denom = 1 + Math.sin(t) * Math.sin(t)
+      positions[i * 3] = (a * Math.cos(t)) / denom + spread
+      positions[i * 3 + 1] = (a * Math.sin(t) * Math.cos(t)) / denom + spread - 100 // Moved down and centered
+      positions[i * 3 + 2] = (randomValues[i * 3 + 2] - 0.5) * 100 // Closer to camera
     }
     return positions
   },
@@ -103,167 +147,6 @@ const generateShapes: Record<ShapeType, (particleCount: number, randomValues: Fl
       positions[i * 3 + 2] = z;
     }
     return positions;
-  },
-  
-  bitcoin: (particleCount: number, randomValues: Float32Array) => {
-    const positions = new Float32Array(particleCount * 3);
-    const radius = 200;
-    const halfParticleCount = Math.floor(particleCount / 2);
-  
-    for (let i = 0; i < particleCount; i++) {
-      let t = i / halfParticleCount * Math.PI;  // We don't need the full circle here
-      const scatterX = (randomValues[i * 3] - 0.5) * 30;
-      const scatterY = (randomValues[i * 3 + 1] - 0.5) * 30;
-      const x = radius * Math.cos(t) + scatterX;
-      const y = radius * Math.sin(t) + scatterY;
-      const z = (randomValues[i * 3 + 2] - 0.5) * 20;
-      
-      if (i < halfParticleCount) {
-        // Upper half circle + vertical lines
-        positions[i * 3] = x;
-        positions[i * 3 + 1] = y + radius / 2;  // Center the upper circle
-      } else {
-        // Lower half circle
-        const index = i - halfParticleCount;
-        t = index / halfParticleCount * Math.PI;
-        const scatterXLower = (randomValues[i * 3] - 0.5) * 30;
-        const scatterYLower = (randomValues[i * 3 + 1] - 0.5) * 30;
-        const xLower = radius * Math.cos(t) + scatterXLower;
-        const yLower = radius * Math.sin(t) + scatterYLower;
-        positions[i * 3] = xLower;
-        positions[i * 3 + 1] = yLower - radius / 2; // Center the lower circle
-      }
-  
-      positions[i * 3 + 2] = z;
-  
-      // Add vertical lines through the middle of the B
-      if (i % Math.floor(particleCount / 10) === 0) {
-        positions[i * 3] = scatterX;  // Keep X very close to zero for the vertical lines
-        positions[i * 3 + 1] = (randomValues[i * 3 + 1] - 0.5) * radius;  // Extend vertically across the symbol
-        positions[i * 3 + 2] = z;
-      }
-    }
-    return positions;
-  },
-
-  robot: (particleCount: number, randomValues: Float32Array) => {
-    const positions = new Float32Array(particleCount * 3);
-    const size = 200;
-    const headHeight = size / 3;
-    const bodyHeight = size / 2;
-    const limbLength = size / 3;
-    
-    for (let i = 0; i < particleCount; i++) {
-      const scatter = randomValues[i * 3] * 20 - 10;
-      
-      // Head
-      if (i < particleCount * 0.2) {
-        positions[i * 3] = (randomValues[i * 3] - 0.5) * size / 2 + scatter;
-        positions[i * 3 + 1] = size / 2 + headHeight / 2 + scatter;
-        positions[i * 3 + 2] = (randomValues[i * 3 + 2] - 0.5) * size / 10;
-      }
-      // Body
-      else if (i < particleCount * 0.6) {
-        positions[i * 3] = (randomValues[i * 3] - 0.5) * size / 3 + scatter;
-        positions[i * 3 + 1] = (randomValues[i * 3 + 1] - 0.5) * bodyHeight  + scatter;
-        positions[i * 3 + 2] = (randomValues[i * 3 + 2] - 0.5) * size / 15;
-      }
-      // Arms and legs
-      else {
-        const limb = Math.floor(randomValues[i * 3] * 4);
-        if (limb < 2) {
-          // Arms
-          positions[i * 3] = ((limb % 2) * 2 - 1) * size / 2 + scatter;
-          positions[i * 3 + 1] = (randomValues[i * 3 + 1] - 0.5) * size / 3 + scatter;
-        } else {
-          // Legs
-          positions[i * 3] = ((limb % 2) * 2 - 1) * size / 4 + scatter;
-          positions[i * 3 + 1] = ((randomValues[i * 3 + 1] * 2 - 1) * size / 2) - (bodyHeight / 2) + scatter;
-        }
-        positions[i * 3 + 2] = (randomValues[i * 3 + 2] - 0.5) * size / 15;
-      }
-    }
-    
-    return positions;
-  },
-
-  tree: (particleCount: number, randomValues: Float32Array) => {
-    const positions = new Float32Array(particleCount * 3);
-    const trunkHeight = 100;
-    const trunkWidth = 20;
-    const crownRadius = 80;
-
-    for (let i = 0; i < particleCount; i++) {
-      const scatter = randomValues[i * 3] * 20 - 10;
-      const t = i / particleCount * Math.PI * 2;
-
-      // Trunk
-      if (i < particleCount * 0.2) {
-        positions[i * 3] = scatter; // X position
-        positions[i * 3 + 1] = (i / particleCount) * trunkHeight; // Y position
-        positions[i * 3 + 2] = scatter; // Z position
-      }
-      // Leaves
-      else {
-        const leafHeight = trunkHeight + (Math.random() * crownRadius);
-        const angle = Math.random() * Math.PI * 2;
-        const radius = Math.random() * crownRadius;
-
-        positions[i * 3] = radius * Math.cos(angle) + scatter; // X position
-        positions[i * 3 + 1] = leafHeight; // Y position
-        positions[i * 3 + 2] = radius * Math.sin(angle) + scatter; // Z position
-      }
-    }
-    return positions;
-  },
-  smiley: (particleCount: number, randomValues: Float32Array) => {
-    const positions = new Float32Array(particleCount * 3)
-    const radius = 200
-    
-    for (let i = 0; i < particleCount; i++) {
-      const scatter = randomValues[i * 3] * 20 - 10
-      const t = i / particleCount * Math.PI * 2
-      
-      // Face circle
-      if (i < particleCount * 0.6) {
-        positions[i * 3] = radius * Math.cos(t) + scatter
-        positions[i * 3 + 1] = radius * Math.sin(t) + scatter
-        positions[i * 3 + 2] = randomValues[i * 3 + 2] * 20 - 10
-      }
-      // Eyes
-      else if (i < particleCount * 0.8) {
-        const eye = i % 2
-        positions[i * 3] = (eye * 2 - 1) * radius/3 + scatter
-        positions[i * 3 + 1] = radius/3 + scatter
-        positions[i * 3 + 2] = randomValues[i * 3 + 2] * 20 - 10
-      }
-      // Smile
-      else {
-        const smile = Math.PI * (0.1 + 0.8 * (i / particleCount))
-        positions[i * 3] = radius/2 * Math.cos(smile) + scatter
-        positions[i * 3 + 1] = radius/2 * Math.sin(smile) - radius/3 + scatter
-        positions[i * 3 + 2] = randomValues[i * 3 + 2] * 20 - 10
-      }
-    }
-    return positions
-  },
-
-  infinity: (particleCount: number, randomValues: Float32Array) => {
-    const positions = new Float32Array(particleCount * 3)
-    const size = 400 
-    
-    for (let i = 0; i < particleCount; i++) {
-      const t = i / particleCount * Math.PI * 2
-      const scatter = randomValues[i * 3] * 20 - 10
-      
-      // Lemniscate formula (infinity symbol)
-      const a = size / 2
-      const denom = 1 + Math.sin(t) * Math.sin(t)
-      positions[i * 3] = (a * Math.cos(t)) / denom + scatter
-      positions[i * 3 + 1] = (a * Math.sin(t) * Math.cos(t)) / denom + scatter
-      positions[i * 3 + 2] = randomValues[i * 3 + 2] * 20 - 10
-    }
-    return positions
   }
 }
 
@@ -275,7 +158,8 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
   const geometryRef = useRef<THREE.BufferGeometry | null>(null)
   const [showWelcomeText, setShowWelcomeText] = useState(false)
   const [showContactForm, setShowContactForm] = useState(false)
-  const shapeIndex = useRef(0);
+  const shapeIndex = useRef(0)
+  const currentShape = useRef<ShapeType>('AXESS')
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -309,10 +193,10 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
     const textPositions = new Float32Array(particleCount * 3)
     const colors = new Float32Array(particleCount * 3)
 
-    // Generate random values once to avoid hydration issues
-    const randomValues = new Float32Array(particleCount * 13).map(() => Math.random()); // Fixed size to 13
+    // Generate random values once
+    const randomValues = new Float32Array(particleCount * 13).map(() => Math.random())
 
-    // Generate text positions with 50% larger size
+    // Generate text positions with original scaling
     const textGeometry = createTextGeometry('AXESS', particleCount)
     for (let i = 0; i < particleCount; i++) {
       textPositions[i * 3] = textGeometry[i * 3] * 9
@@ -320,30 +204,25 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
       textPositions[i * 3 + 2] = textGeometry[i * 3 + 2] * 9
     }
 
-    // Create a more spread out initial formation
+    // Create initial spread out formation
     for (let i = 0; i < particleCount; i++) {
-      const radius = randomValues[i * 3] * 400 + (randomValues[i * 3 + 1] * 200) // Adjusted radius range
+      const radius = randomValues[i * 3] * 400 + (randomValues[i * 3 + 1] * 200)
       const theta = randomValues[i * 3 + 2] * Math.PI * 2
       const phi = randomValues[i * 3 + 3] * Math.PI * 2
       
-      const spiral = randomValues[i * 3 + 4] * 100 // Adjusted spiral effect
+      const spiral = randomValues[i * 3 + 4] * 100
       positions[i * 3] = (radius * Math.sin(phi) * Math.cos(theta)) + (spiral * Math.cos(theta))
       positions[i * 3 + 1] = (radius * Math.sin(phi) * Math.sin(theta)) + (spiral * Math.sin(theta))
-      positions[i * 3 + 2] = radius * Math.cos(phi) * randomValues[i * 3 + 5] // Adjusted Z spread
+      positions[i * 3 + 2] = radius * Math.cos(phi) * randomValues[i * 3 + 5]
 
-      // Brighter colors
+      // Set colors
       if (randomValues[i * 3 + 6] < 0.4) {
-        // Pure white
-        colors[i * 3] = 1.0
-        colors[i * 3 + 1] = 1.0
-        colors[i * 3 + 2] = 1.0
+        colors[i * 3] = colors[i * 3 + 1] = colors[i * 3 + 2] = 1.0
       } else if (randomValues[i * 3 + 7] < 0.7) {
-        // Bright blue
         colors[i * 3] = 0.7
         colors[i * 3 + 1] = 0.9
         colors[i * 3 + 2] = 1.0
       } else {
-        // Light purple
         colors[i * 3] = 0.8
         colors[i * 3 + 1] = 0.6
         colors[i * 3 + 2] = 1.0
@@ -356,117 +235,106 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3))
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3))
 
-    // Brighter particles
     const material = new THREE.PointsMaterial({
       size: 0.5,
       vertexColors: true,
       transparent: true,
-      opacity: 1.0, 
+      opacity: 1.0,
       sizeAttenuation: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false
     })
 
-    // Create particle system
     const particles = new THREE.Points(geometry, material)
     scene.add(particles)
 
-    const textSpread = 20
-    
-    for (let i = 0; i < particleCount; i++) {
-      const letterIndex = Math.floor((i / particleCount) * 5)
-      const letterPosition = (letterIndex - 2) * textSpread
-      
-      const angle = (i / particleCount) * Math.PI * 2
-      const letterRadius = 12 + randomValues[i * 3 + 8] * 6 // Increased radius
-      const heightVariation = randomValues[i * 3 + 9] * 9 // Increased height variation
-
-      originalPositions[i * 3] = letterPosition + Math.cos(angle) * letterRadius
-      originalPositions[i * 3 + 1] = Math.sin(angle) * letterRadius + heightVariation
-      originalPositions[i * 3 + 2] = Math.cos(angle * 2) * 6 // Increased depth
-    }
-
-    const galaxyPositions = generateShapes.galaxy(particleCount, randomValues);
-    geometry.setAttribute('position', new THREE.BufferAttribute(galaxyPositions, 3));
-
+    // Initial animation sequence
     const tl = gsap.timeline({
       delay: 2,
       onComplete: () => {
-        setTimeout(() => setShowWelcomeText(true), 1000)
+        setTimeout(() => {
+          setShowWelcomeText(true)
+          // Start shape transitions after AXESS completes
+          startShapeTransitions()
+        }, 3000) // Hold AXESS for 3 seconds
       }
     })
 
-    // Animate to text formation
-    tl.to(galaxyPositions, {
+    // Initial AXESS formation
+    tl.to(positions, {
       duration: 3,
       ease: 'power2.inOut',
       onUpdate: () => {
         for (let i = 0; i < particleCount; i++) {
           const ix = i * 3
-          galaxyPositions[ix] += (textPositions[ix] - galaxyPositions[ix]) * 0.1
-          galaxyPositions[ix + 1] += (textPositions[ix + 1] - galaxyPositions[ix + 1]) * 0.1
-          galaxyPositions[ix + 2] += (textPositions[ix + 2] - galaxyPositions[ix + 2]) * 0.1
+          positions[ix] += (textPositions[ix] - positions[ix]) * 0.1
+          positions[ix + 1] += (textPositions[ix + 1] - positions[ix + 1]) * 0.1
+          positions[ix + 2] += (textPositions[ix + 2] - positions[ix + 2]) * 0.1
         }
         geometry.attributes.position.needsUpdate = true
       }
     })
-
-    // Animate to burst and spread widely
-    tl.to(galaxyPositions, {
-      duration: 2,
-      ease: 'power2.inOut',
-      onUpdate: () => {
-        for (let i = 0; i < particleCount; i++) {
-          const ix = i * 3;
-          const burstFactor = i < particleCount * 0.7 ? 1.5 : 0.1; // 60% of particles burst towards the camera
-          galaxyPositions[ix] += (randomValues[i * 3 + 10] * 800 - 400) * burstFactor; // Adjusted burst range
-          galaxyPositions[ix + 1] += (randomValues[i * 3 + 11] * 800 - 400) * burstFactor; // Adjusted burst range
-          galaxyPositions[ix + 2] += (randomValues[i * 3 + 12] * 800 - 400) * burstFactor; // Adjusted burst range
-        }
-        geometry.attributes.position.needsUpdate = true;
-      },
-      onComplete: () => {
-        // After burst, transition to S shape
-        const sPositions = generateShapes.s(particleCount, randomValues);
-        gsap.to(galaxyPositions, {
-          duration: 2,
-          ease: 'power2.inOut',
+    
+    // Hold AXESS for 3 seconds
+    .then(() => new Promise(resolve => setTimeout(resolve, 3000)))
+    
+    // Then start the shape transition cycle
+    const startShapeTransitions = () => {
+      const transitionToNextShape = () => {
+        shapeIndex.current = (shapeIndex.current + 1) % shapes.length
+        const nextShape = shapes[shapeIndex.current]
+        currentShape.current = nextShape
+        
+        const nextPositions = generateShapes[nextShape](particleCount, randomValues)
+        
+        // Dissolve current shape by spreading particles randomly
+        gsap.to(positions, {
+          duration: 3, // Slower dissolution
+          ease: 'power1.inOut',
           onUpdate: () => {
             for (let i = 0; i < particleCount; i++) {
-              const ix = i * 3;
-              galaxyPositions[ix] += (sPositions[ix] - galaxyPositions[ix]) * 0.1;
-              galaxyPositions[ix + 1] += (sPositions[ix + 1] - galaxyPositions[ix + 1]) * 0.1;
-              galaxyPositions[ix + 2] += (sPositions[ix + 2] - galaxyPositions[ix + 2]) * 0.1;
+              const ix = i * 3
+              // Add random movement to create dissolution effect
+              const randomX = (Math.random() - 0.5) * 3000
+              const randomY = (Math.random() - 0.5) * 3000
+              const randomZ = (Math.random() - 0.5) * 1000
+              
+              positions[ix] += (randomX - positions[ix]) * 0.02
+              positions[ix + 1] += (randomY - positions[ix + 1]) * 0.02
+              positions[ix + 2] += (randomZ - positions[ix + 2]) * 0.02
             }
-            geometry.attributes.position.needsUpdate = true;
+            geometry.attributes.position.needsUpdate = true
           },
           onComplete: () => {
-            // Start shape rotation interval
-            setInterval(() => {
-              shapeIndex.current = (shapeIndex.current + 1) % shapes.length;
-              const nextShape = shapes[shapeIndex.current] as ShapeType;
-              const nextPositions = generateShapes[nextShape](particleCount, randomValues);
-              
-              gsap.to(galaxyPositions, {
-                duration: 2,
-                ease: 'power2.inOut',
-                onUpdate: () => {
-                  for (let i = 0; i < particleCount; i++) {
-                    const ix = i * 3;
-                    galaxyPositions[ix] += (nextPositions[ix] - galaxyPositions[ix]) * 0.1;
-                    galaxyPositions[ix + 1] += (nextPositions[ix + 1] - galaxyPositions[ix + 1]) * 0.1;
-                    galaxyPositions[ix + 2] += (nextPositions[ix + 2] - galaxyPositions[ix + 2]) * 0.1;
-                  }
-                  geometry.attributes.position.needsUpdate = true;
+            // Then transition to next shape
+            gsap.to(positions, {
+              duration: 3, // Slower formation
+              ease: 'power2.out',
+              onUpdate: () => {
+                for (let i = 0; i < particleCount; i++) {
+                  const ix = i * 3
+                  positions[ix] += (nextPositions[ix] - positions[ix]) * 0.05 // Gentler transition
+                  positions[ix + 1] += (nextPositions[ix + 1] - positions[ix + 1]) * 0.05
+                  positions[ix + 2] += (nextPositions[ix + 2] - positions[ix + 2]) * 0.05
                 }
-              });
-            }, 5000);
+                geometry.attributes.position.needsUpdate = true
+              },
+              onComplete: () => {
+                // Hold shape for longer before next transition
+                setTimeout(transitionToNextShape, 5000) // 5 seconds hold
+              }
+            })
           }
-        });
+        })
       }
-    })
 
-    // Animation loop with mouse interaction
+      // Start the transition cycle after AXESS animation completes
+      setTimeout(() => {
+        transitionToNextShape()
+      }, 3000) // Wait 3 seconds after AXESS before starting transitions
+    }
+
+    // Animation loop with magnetic effect
     const animate = () => {
       requestAnimationFrame(animate)
       
@@ -475,17 +343,23 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
       // Mouse interaction with magnetic effect
       for (let i = 0; i < particleCount; i++) {
         const ix = i * 3
-        const dx = positions[ix] - (mousePosition.current.x * 100) 
+        const dx = positions[ix] - (mousePosition.current.x * 100)
         const dy = positions[ix + 1] - (mousePosition.current.y * 100)
         const dist = Math.sqrt(dx * dx + dy * dy)
         
-        const repelStrength = Math.max(0, 1 - dist / 100) * 4 // Reduced distance effect to 10%
+        // Reduce effect during AXESS text formation
+        const isTextFormation = currentShape.current === 'AXESS'
+        const effectMultiplier = isTextFormation ? 0.3 : 1
+        
+        const repelStrength = Math.max(0, 1 - dist / 100) * 4 * effectMultiplier
         positions[ix] += dx * repelStrength * 0.01
         positions[ix + 1] += dy * repelStrength * 0.01
 
-        positions[ix] += (originalPositions[ix] - positions[ix]) * 0.005
-        positions[ix + 1] += (originalPositions[ix + 1] - positions[ix + 1]) * 0.005
-        positions[ix + 2] += (originalPositions[ix + 2] - positions[ix + 2]) * 0.005
+        // Slower return to original position
+        const returnSpeed = 0.005
+        positions[ix] += (originalPositions[ix] - positions[ix]) * returnSpeed
+        positions[ix + 1] += (originalPositions[ix + 1] - positions[ix + 1]) * returnSpeed
+        positions[ix + 2] += (originalPositions[ix + 2] - positions[ix + 2]) * returnSpeed
       }
       
       geometry.attributes.position.needsUpdate = true
@@ -493,17 +367,37 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
     }
 
     const handleMouseMove = (event: MouseEvent) => {
+      const rect = containerRef.current?.getBoundingClientRect()
+      if (!rect) return
+
       mousePosition.current = {
-        x: (event.clientX / window.innerWidth) * 2 - 1,
-        y: -(event.clientY / window.innerHeight) * 2 + 1
+        x: ((event.clientX - rect.left) / rect.width) * 2 - 1,
+        y: -((event.clientY - rect.top) / rect.height) * 2 + 1
       }
     }
 
+    // Add mouse event listener
     window.addEventListener('mousemove', handleMouseMove)
     animate()
 
+    // Make sure to update camera and renderer on window resize
+    const handleResize = () => {
+      if (!camera || !renderer) return
+      
+      camera.aspect = window.innerWidth / window.innerHeight
+      camera.updateProjectionMatrix()
+      renderer.setSize(window.innerWidth, window.innerHeight)
+      
+      // Update camera position to maintain view
+      camera.position.z = Math.max(400, window.innerWidth / 4)
+    }
+
+    // Add resize listener
+    window.addEventListener('resize', handleResize)
+
     // Cleanup
     return () => {
+      window.removeEventListener('resize', handleResize)
       window.removeEventListener('mousemove', handleMouseMove)
       renderer.dispose()
       geometry.dispose()
@@ -512,11 +406,12 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
       rendererRef.current = null
       geometryRef.current = null
     }
-  }, [onAnimationComplete])
+  }, [])
 
   return ( 
     <>
       <div ref={containerRef} className="fixed inset-0 z-0 bg-black" />
+      {showWelcomeText && <Navbar />}
       {showWelcomeText && (
         <div className="fixed inset-0 flex flex-col items-center justify-center z-10">
           <div className="text-center">

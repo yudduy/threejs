@@ -4,7 +4,7 @@ import { FormEvent, useState } from 'react'
 import { motion } from 'framer-motion'
 
 interface ContactFormProps {
-  onClose?: () => void;
+  onClose: () => void;
 }
 
 interface ContactFormData {
@@ -64,7 +64,7 @@ export function ContactForm({ onClose }: ContactFormProps) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to send message'
       setSubmitStatus({ 
         type: 'error', 
-        message: `${errorMessage}. Please try again later.`
+        message: 'Something went wrong. Please contact us at duy@axess.vc'
       })
     } finally {
       setLoading(false)
@@ -73,47 +73,58 @@ export function ContactForm({ onClose }: ContactFormProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: .1 }}
-      className="bg-white/10 backdrop-blur-md p-6 rounded-lg w-80 border border-white/20"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
     >
-      <form onSubmit={handleSubmit} className="space-y-3">
-        <input
-          type="email"
-          placeholder="Your email"
-          value={formData.email}
-          onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-          required
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
-        />
-        <textarea
-          placeholder="Your message"
-          value={formData.message}
-          onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-          required
-          rows={2}
-          className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
-        />
+      <div className="bg-black p-8 rounded-lg border border-gray-800 w-full max-w-md relative">
         <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg text-sm transition-all duration-300 disabled:opacity-50"
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-400 hover:text-white"
         >
-          {loading ? 'Sending...' : 'Connect with us'}
+          ✕
         </button>
-        {submitStatus.type && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className={`text-sm ${
-              submitStatus.type === 'success' ? 'text-green-400' : 'text-red-400'
-            }`}
-          >
-            {submitStatus.message}
-          </motion.p>
+        
+        <h2 className="text-2xl font-bold text-white mb-6">Contact Us</h2>
+        {submitStatus.type === 'success' ? (
+          <div className="text-green-400 text-center">
+            <p>Thank you for your message!</p>
+            <p>We'll get back to you soon.</p>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="email"
+              placeholder="Your email"
+              value={formData.email}
+              onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+              required
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
+            />
+            <textarea
+              placeholder="Your message"
+              value={formData.message}
+              onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
+              required
+              rows={2}
+              className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-white/10 hover:bg-white/20 text-white py-2 rounded-lg text-sm transition-all duration-300 disabled:opacity-50"
+            >
+              {loading ? 'Sending...' : 'Connect with us'}
+            </button>
+            {submitStatus.type === 'error' && (
+              <div className="text-red-500 text-sm mt-2">
+                {submitStatus.message}
+              </div>
+            )}
+          </form>
         )}
-      </form>
+      </div>
     </motion.div>
   )
 } 
