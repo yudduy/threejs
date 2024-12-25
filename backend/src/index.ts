@@ -1,8 +1,7 @@
 import express, { Request, Response } from 'express'
-import bodyParser from 'body-parser'
-import nodemailer from 'nodemailer'
-import dotenv from 'dotenv'
 import cors from 'cors'
+import dotenv from 'dotenv'
+import nodemailer from 'nodemailer'
 
 dotenv.config()
 
@@ -15,7 +14,7 @@ const allowedOrigins = [
 ].filter(Boolean)
 
 app.use(cors({
-  origin: (origin, callback) => {
+  origin: (origin: string | undefined, callback: (error: Error | null, success?: boolean) => void) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true)
     } else {
@@ -27,34 +26,31 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
 
-app.use(bodyParser.json())
+app.use(express.json())
 
-// Basic health check endpoint
-app.get('/api/health', (req: Request, res: Response) => {
-  res.status(200).json({ status: 'healthy' })
-})
-
-// Create email transporter
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
+  },
+  tls: {
+    rejectUnauthorized: false
   }
 })
 
-// Contact form handler
-const contactPost = async (req: Request, res: Response) => {
+app.post('/api/contact', async (req: Request, res: Response) => {
   try {
     const { email, message } = req.body
-    console.log('Received contact form submission:', { email, message })
 
     if (!email || !message) {
       return res.status(400).json({ error: 'Email and message are required' })
     }
 
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"Axess Capital" <${process.env.EMAIL_USER}>`,
       to: 'duy@axess.vc',
       subject: 'New Contact Form Submission - Axess Capital',
       text: `New message from contact form:\n\nEmail: ${email}\nMessage: ${message}`,
@@ -67,23 +63,20 @@ const contactPost = async (req: Request, res: Response) => {
 
     await transporter.sendMail(mailOptions)
     console.log('Email sent successfully')
-
     return res.status(200).json({ message: 'Contact form submitted successfully' })
   } catch (error) {
     console.error('Server error:', error)
     return res.status(500).json({ error: 'Internal server error' })
   }
-}
+})
 
-app.post('/api/contact', contactPost)
-
-// For Vercel serverless deployment
+// For local development
 if (process.env.NODE_ENV !== 'production') {
   const PORT = process.env.PORT || 5001
   app.listen(PORT, () => {
-    console.log(`Backend server running on port ${PORT}`)
+    console.log(`Server running on port ${PORT}`)
   })
 }
 
-// Export for Vercel serverless function
+// For Vercel
 export default app
