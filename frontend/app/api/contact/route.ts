@@ -11,24 +11,40 @@ export async function POST(request: Request) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: JSON.stringify(body),
     })
 
-    const data = await response.json()
-    console.log('Backend response:', data)
+    // First try to get the response as text
+    const responseText = await response.text()
     
-    if (!response.ok) {
+    // Try to parse the response as JSON
+    try {
+      const data = JSON.parse(responseText)
+      
+      if (!response.ok) {
+        console.error('Server error response:', data)
+        return NextResponse.json(
+          { 
+            error: data.error || 'Server error occurred',
+            details: data.details || 'No additional details available'
+          },
+          { status: response.status }
+        )
+      }
+
+      return NextResponse.json(data)
+    } catch (parseError) {
+      console.error('Failed to parse response:', responseText)
       return NextResponse.json(
         { 
-          error: data.error || 'Server error occurred',
-          details: data.details || 'No additional details available'
+          error: 'Invalid server response',
+          details: 'Server returned invalid JSON'
         },
-        { status: response.status }
+        { status: 502 }
       )
     }
-
-    return NextResponse.json(data)
   } catch (error) {
     console.error('API route error:', error)
     return NextResponse.json(

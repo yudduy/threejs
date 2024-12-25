@@ -1,36 +1,51 @@
 import { Request, Response } from 'express'
 import nodemailer from 'nodemailer'
-import dotenv from 'dotenv'
 
-dotenv.config() // Load environment variables
-
-// Create transporter with more detailed configuration
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    pass: process.env.EMAIL_PASS
   },
+  tls: {
+    rejectUnauthorized: false
+  }
 })
 
 export const handleContact = async (req: Request, res: Response) => {
+  // Log the incoming request
+  console.log('Received contact request:', req.body)
+
   try {
     const { email, message } = req.body
-    console.log('Received contact request:', { email })
 
-    if (!email || !message) {
-      return res.status(400).json({ error: 'Email and message are required' })
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!email || !emailRegex.test(email)) {
+      return res.status(400).json({ 
+        error: 'Invalid email format',
+        details: 'Please provide a valid email address'
+      })
     }
 
-    // Verify SMTP connection
+    // Validate message
+    if (!message || message.trim().length < 1) {
+      return res.status(400).json({ 
+        error: 'Invalid message',
+        details: 'Message cannot be empty'
+      })
+    }
+
+    // Verify SMTP connection before sending
     try {
       await transporter.verify()
-      console.log('SMTP connection verified')
-    } catch (verifyError: unknown) {
+    } catch (verifyError) {
       console.error('SMTP verification failed:', verifyError)
       return res.status(500).json({ 
-        error: 'Email service configuration error',
-        details: verifyError instanceof Error ? verifyError.message : 'Failed to verify email service' 
+        error: 'Email service unavailable',
+        details: 'Unable to connect to email service'
       })
     }
 
@@ -48,16 +63,27 @@ export const handleContact = async (req: Request, res: Response) => {
 
     try {
       await transporter.sendMail(mailOptions)
-      console.log('Email sent successfully')
-      return res.status(200).json({ message: 'Contact form submitted successfully' })
-    } catch (emailError: unknown) {
+      console.log('Email sent successfully to:', mailOptions.to)
+      
+      // Send JSON response with proper headers
+      res.setHeader('Content-Type', 'application/json')
+      return res.status(200).json({
+        success: true,
+        message: 'Contact form submitted successfully'
+      })
+
+    } catch (emailError) {
       console.error('Email sending failed:', emailError)
-      const message = emailError instanceof Error ? emailError.message : 'Failed to send email'
-      return res.status(500).json({ error: message })
+      return res.status(500).json({
+        error: 'Failed to send email',
+        details: 'Unable to send email at this time'
+      })
     }
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Server error:', error)
-    const message = error instanceof Error ? error.message : 'Internal server error'
-    return res.status(500).json({ error: message })
+    return res.status(500).json({
+      error: 'Internal server error',
+      details: 'An unexpected error occurred'
+    })
   }
 } 
