@@ -1,53 +1,72 @@
 import { VercelRequest, VercelResponse } from '@vercel/node';
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
+import { validateEmail } from '../src/utils/validation';
 
-const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  },
-  tls: {
-    rejectUnauthorized: false
-  }
-});
+// Initialize SendGrid
+if (!process.env.SENDGRID_API_KEY) {
+  throw new Error('SENDGRID_API_KEY is not defined');
+}
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // CORS headers
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', process.env.FRONTEND_URL || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const { email, message } = req.body;
+    const { name, email, message } = req.body;
 
+    // Validation
     if (!email || !message) {
-      return res.status(400).json({ error: 'Email and message are required' });
+      return res.status(400).json({ 
+        error: 'Email and message are required' 
+      });
     }
 
-    const mailOptions = {
-      from: `"Axess Capital" <${process.env.EMAIL_USER}>`,
+    if (!validateEmail(email)) {
+      return res.status(400).json({ 
+        error: 'Invalid email format' 
+      });
+    }
+
+    const msg = {
       to: 'duy@axess.vc',
+      from: process.env.SENDGRID_VERIFIED_SENDER!,
       subject: 'New Contact Form Submission - Axess Capital',
-      text: `New message from contact form:\n\nEmail: ${email}\nMessage: ${message}`,
+      text: `
+        Name: ${name || 'Not provided'}
+        Email: ${email}
+        Message: ${message}
+      `,
       html: `
-        <h2>New message from contact form</h2>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Message:</strong> ${message}</p>
+        <div style="font-family: Arial, sans-serif; padding: 20px;">
+          <h2 style="color: #333;">New Contact Form Submission</h2>
+          ${name ? `<p><strong>Name:</strong> ${name}</p>` : ''}
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Message:</strong></p>
+          <p style="white-space: pre-line;">${message}</p>
+        </div>
       `
     };
 
-    try {
-      await transporter.sendMail(mailOptions);
-      console.log('Email sent successfully');
-      return res.status(200).json({ message: 'Contact form submitted successfully' });
-    } catch (emailError) {
-      console.error('Email sending failed:', emailError);
-      return res.status(500).json({ error: 'Failed to send email' });
-    }
+    await sgMail.send(msg);
+    return res.status(200).json({ message: 'Message sent successfully' });
   } catch (error) {
-    console.error('Server error:', error);
-    return res.status(500).json({ error: 'Internal server error' });
+    console.error('SendGrid Error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to send message. Please contact us at duy@axess.vc' 
+    });
   }
 } 

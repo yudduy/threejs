@@ -86,7 +86,7 @@ export function ContactForm({ onClose }: ContactFormProps) {
           ✕
         </button>
         
-        <h2 className="text-2xl font-bold text-white mb-6">Contact Us</h2>
+        <h2 className="text-2xl font-bold text-white mb-6 text-center">Contact Us</h2>
         {submitStatus.type === 'success' ? (
           <div className="text-green-400 text-center">
             <p>Thank you for your message!</p>
