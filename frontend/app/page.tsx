@@ -7,7 +7,7 @@ import { Navbar } from '@/components/navbar'
 import { TypingAnimation } from '@/components/typing-animation'
 import { ContactForm } from '@/components/ContactForm'
 
-const RoseUniverse = dynamic(() => import('@/components/newAnimation'), {
+const RoseUniverse = dynamic(() => import('@/components/particleAnimation'), {
   ssr: false
 })
 
