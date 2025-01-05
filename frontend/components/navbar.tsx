@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
+import ScrambleText from '@/components/ui/Scramble-Text'
 
 export function Navbar() {
   const navItems = [
@@ -30,17 +31,17 @@ export function Navbar() {
               href={item.path}
               className="nav-link px-4 py-2 text-sm text-white/70 hover:text-white transition-colors"
             >
-              {item.name}
+              <ScrambleText text={item.name} settings={{ speed: 1.2 }} />
             </Link>
           ))}
           <a 
-            href="mailto:duy@axess.vc" 
+            href="https://airtable.com/app3pQwTajrXxwY9B/pag7zTCGlhIigg7XL/form" 
             className="ml-4">
             <Button 
               variant="secondary" 
               className="bg-white/10 hover:bg-white/20 text-white border-0 transition-transform hover:scale-105"
             >
-              Contact us →
+              <ScrambleText text="Become an LP" settings={{ speed: 1.2 }} />
             </Button>
           </a>
         </div>

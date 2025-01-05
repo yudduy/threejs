@@ -5,6 +5,7 @@ import * as THREE from 'three'
 import { gsap } from 'gsap'
 import { generateShapes, ShapeType, shapes } from './shapes/particleShapes'
 import { createTextGeometry } from './textGeometry'
+import ScrambleText from './ui/Scramble-Text'
 
 interface RoseUniverseProps {
   onAnimationComplete: () => void;
@@ -44,7 +45,7 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
     renderer.setSize(window.innerWidth, window.innerHeight)
     containerRef.current.appendChild(renderer.domElement)
 
-    const particleCount = 100000
+    const particleCount = window.innerWidth < 768 ? 50000 : 100000
     const positions = new Float32Array(particleCount * 3)
     const originalPositions = new Float32Array(particleCount * 3)
     const textPositions = new Float32Array(particleCount * 3)
@@ -107,18 +108,17 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
 
     // Initial animation sequence
     const tl = gsap.timeline({
-      delay: 2,
+      delay: 1,
       onComplete: () => {
         setTimeout(() => {
           onAnimationComplete()
-          startShapeTransitions()
         }, 3000)
       }
     })
 
     // Animate to AXESS text formation
     tl.to(positions, {
-      duration: 3,
+      duration: 2,
       ease: 'power2.inOut',
       onUpdate: () => {
         for (let i = 0; i < particleCount; i++) {
@@ -133,7 +133,7 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
 
     // Animate explosion
     .to(positions, {
-      duration: 2,
+      duration: 1,
       ease: 'power2.inOut',
       onUpdate: () => {
         for (let i = 0; i < particleCount; i++) {
@@ -160,22 +160,26 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
             }
             geometry.attributes.position.needsUpdate = true
           },
-          onComplete: startShapeTransitions
+          onComplete: () => {
+            // Wait a bit before starting the shape transitions
+            setTimeout(startShapeTransitions, 2000)
+          }
         })
       }
     })
 
     const startShapeTransitions = () => {
       const transitionToNextShape = () => {
+        // Get the current shape and move to next in sequence
         shapeIndex.current = (shapeIndex.current + 1) % shapes.length
         const nextShape = shapes[shapeIndex.current]
         currentShape.current = nextShape
         
         const nextPositions = generateShapes[nextShape](particleCount, randomValues)
         
-        // Dissolve current shape by spreading particles randomly
+        // Directly start with the dissolve animation (removed the small circular transition)
         gsap.to(positions, {
-          duration: 3,
+          duration: 2.5,
           ease: 'power1.inOut',
           onUpdate: () => {
             for (let i = 0; i < particleCount; i++) {
@@ -191,8 +195,9 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
             geometry.attributes.position.needsUpdate = true
           },
           onComplete: () => {
+            // Form the next shape
             gsap.to(positions, {
-              duration: 3,
+              duration: 2.5,
               ease: 'power2.out',
               onUpdate: () => {
                 for (let i = 0; i < particleCount; i++) {
@@ -204,6 +209,7 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
                 geometry.attributes.position.needsUpdate = true
               },
               onComplete: () => {
+                // Wait before next transition
                 setTimeout(transitionToNextShape, 5000)
               }
             })
@@ -211,14 +217,22 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
         })
       }
 
-      setTimeout(() => {
-        transitionToNextShape()
-      }, 3000)
+      // Start the first transition
+      transitionToNextShape()
     }
 
-    // Animation loop with magnetic effect
-    const animate = () => {
+    // Add RAF throttling
+    let lastTime = 0
+    const fps = 60
+    const interval = 1000 / fps
+
+    const animate = (currentTime: number) => {
       requestAnimationFrame(animate)
+      
+      const deltaTime = currentTime - lastTime
+      if (deltaTime < interval) return
+      
+      lastTime = currentTime - (deltaTime % interval)
       
       const positions = geometry.attributes.position.array as Float32Array
 

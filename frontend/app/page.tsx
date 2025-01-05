@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import { Navbar } from '@/components/navbar'
 import { TypingAnimation } from '@/components/typing-animation'
 import { ContactForm } from '@/components/ContactForm'
+import ScrambleText from '@/components/ui/Scramble-Text'
 
 const RoseUniverse = dynamic(() => import('@/components/particleAnimation'), {
   ssr: false
@@ -38,9 +39,11 @@ export default function Home() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 1 }}
               >
-                <p className="mt-4 text-lg font-semibold text-gray-400">
-                  Stanford's exclusive venture capital fund. Coming Soon.
-                </p>
+                <ScrambleText 
+                  text="Stanford's exclusive venture capital fund. Coming Soon." 
+                  settings={{ speed: 1.5 }} 
+                  className="mt-4 text-lg font-semibold text-gray-400" 
+                />
                 <div className="flex justify-center">
                   <motion.div
                     className="mt-4 text-lg font-semibold text-white cursor-pointer"
@@ -51,7 +54,10 @@ export default function Home() {
                     }}
                     onClick={() => setShowContactForm(true)}
                   >
-                    Curious? Contact Us!
+                    <ScrambleText 
+                      text="Curious? Contact Us!" 
+                      settings={{ speed: 1.2 }} 
+                    />
                   </motion.div>
                 </div>
               </motion.div>

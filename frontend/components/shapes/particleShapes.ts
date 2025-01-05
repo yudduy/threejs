@@ -1,12 +1,12 @@
-import { createTextGeometry } from '../textGeometry'
-import * as THREE from 'three'
+import { createTextGeometry } from '../textGeometry';
+import * as THREE from 'three';
 
 export type ShapeType = 'galaxy' | 'blockchain' | 'neuralNetwork' | 'quantum' | 'AXESS' | 's' | 'infinity';
 
-export const shapes: ShapeType[] = ['galaxy', 'blockchain', 'neuralNetwork', 'quantum'];
+export const shapes: ShapeType[] = ['galaxy', 'blockchain', 'neuralNetwork', 'quantum', 's', 'infinity'];
 
 export const generateShapes: Record<ShapeType, (particleCount: number, randomValues: Float32Array) => Float32Array> = {
-    AXESS: (particleCount: number, randomValues: Float32Array) => {
+    AXESS: (particleCount: number, randomValues: Float32Array): Float32Array => {
         const positions = createTextGeometry('AXESS', particleCount);
         
         // Scale the text positions without adding circular formation
@@ -20,7 +20,7 @@ export const generateShapes: Record<ShapeType, (particleCount: number, randomVal
         return positions;
     },
     
-    galaxy: (particleCount: number, randomValues: Float32Array) => {
+    galaxy: (particleCount: number, randomValues: Float32Array): Float32Array => {
         const positions = new Float32Array(particleCount * 3);
         for (let i = 0; i < particleCount; i++) {
             const radius = randomValues[i * 3] * 800 + (randomValues[i * 3 + 1] * 400); // Increased spread
@@ -35,10 +35,10 @@ export const generateShapes: Record<ShapeType, (particleCount: number, randomVal
         return positions;
     },
     
-    blockchain: (particleCount: number, randomValues: Float32Array) => {
+    blockchain: (particleCount: number, randomValues: Float32Array): Float32Array => {
         const positions = new Float32Array(particleCount * 3);
         const radius = 450; // Increased size
-        const layers = 5;
+        const layers = 8;
         
         for (let i = 0; i < particleCount; i++) {
             const layer = Math.floor(i / (particleCount / layers));
@@ -53,7 +53,7 @@ export const generateShapes: Record<ShapeType, (particleCount: number, randomVal
         return positions;
     },
     
-    neuralNetwork: (particleCount: number, randomValues: Float32Array) => {
+    neuralNetwork: (particleCount: number, randomValues: Float32Array): Float32Array => {
         const positions = new Float32Array(particleCount * 3);
         const layers = 4;
         const nodesPerLayer = Math.floor(particleCount / layers);
@@ -69,7 +69,7 @@ export const generateShapes: Record<ShapeType, (particleCount: number, randomVal
         return positions;
     },
 
-    quantum: (particleCount: number, randomValues: Float32Array) => {
+    quantum: (particleCount: number, randomValues: Float32Array): Float32Array => {
         const positions = new Float32Array(particleCount * 3);
         const radius = 300;
         
@@ -85,7 +85,7 @@ export const generateShapes: Record<ShapeType, (particleCount: number, randomVal
         return positions;
     },
 
-    infinity: (particleCount: number, randomValues: Float32Array) => {
+    infinity: (particleCount: number, randomValues: Float32Array): Float32Array => {
         const positions = new Float32Array(particleCount * 3);
         const size = 800; // Increased size
         
