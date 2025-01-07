@@ -271,7 +271,7 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
     }
 
     window.addEventListener('mousemove', handleMouseMove)
-    animate()
+    animate(performance.now())
 
     const handleResize = () => {
       if (!camera || !renderer) return

@@ -8,7 +8,7 @@ const structuredData = {
   "@context": "https://schema.org",
   "@type": "Organization",
   "name": "AXESS Capital",
-  "description": "Pioneering Stanford-focused venture capital firm focusing on blockchain, web3, and AI investments",
+  "description": "Stanford-focused venture capital firm focusing on blockchain, web3, and AI",
   "url": "https://axess.vc", 
   "logo": "https://axess.vc/logo.png",
   "sameAs": [
@@ -23,29 +23,29 @@ const structuredData = {
 }
 
 export const metadata: Metadata = {
-  title: 'AXESS | Venture Capital & Web3 Pioneer',
-  description: 'AXESS Ventures - Pioneering the future of technology investment. We partner with innovative startups in blockchain and AI to decentralize tomorrow\'s technological landscape.',
-  keywords: 'venture capital, AXESS capital, blockchain startups, AI startups, blockchain investment, web3, ai agents, blockchain accelerator, bitcoin, ethereum, solana, polygon, angel investor, Stanford, Stanford University, Stanford startups, Stanford University startups, Stanford University blockchain, Stanford University AI, Stanford University web3, Stanford University venture capital, Stanford University blockchain investment, Stanford University web3 investment, Stanford University ai agents, Stanford University blockchain accelerator, Stanford University bitcoin, Stanford University ethereum, Stanford University solana, Stanford University polygon, Stanford University angel investor',
+  title: 'Axess | Stanford-focused Venture Capital in Blockchain & AI',
+  description: 'Axess Capital - Pioneering the future of blockchain and AI investment. We partner with Stanford startups in blockchain and AI to decentralize tomorrow\'s technological landscape.',
+  keywords: 'venture capital, Axess capital, blockchain startups, AI startups, blockchain investment, web3, ai agents, blockchain accelerator, bitcoin, ethereum, solana, polygon, angel investor, Stanford, Stanford University, Stanford startups, Stanford University startups, Stanford University blockchain, Stanford University AI, Stanford University web3, Stanford University venture capital, Stanford University blockchain investment, Stanford University web3 investment, Stanford University ai agents, Stanford University blockchain accelerator, Stanford University bitcoin, Stanford University ethereum, Stanford University solana, Stanford University polygon, Stanford University angel investor',
   openGraph: {
-    title: 'AXESS | Venture Capital & Web3 Pioneer',
+    title: 'Axess | Stanford-focused Blockchain & AI Venture Capital',
     description: 'Pioneering the future of technology investment across AI and blockchain.',
     images: [
       {
-        url: '/og-image.jpg', //placeholder for now
+        url: '/og-image.jpg', // placeholder for now
         width: 1200,
         height: 630,
-        alt: 'AXESS Capital'
+        alt: 'Axess Capital'
       }
     ],
     type: 'website',
     locale: 'en_US',
-    siteName: 'AXESS Capital'
+    siteName: 'Axess Capital'
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AXESS | Stanford Focused Venture Capital & Web3 Investment',
+    title: 'Axess Capital| Stanford-focused Venture Capital in Blockchain & AI',
     description: 'Pioneering the future of technology investment across blockchain and AI.',
-    images: ['/twitter-image.jpg'], //placeholder for now
+    images: ['/twitter-image.jpg'], // placeholder for now
   },
   robots: {
     index: true,
