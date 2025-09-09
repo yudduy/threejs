@@ -22,7 +22,7 @@ export function Navbar() {
     >
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold text-white">
-          AXESS CAPITAL
+          YOUR BRAND
         </Link>
         <div className="hidden md:flex items-center space-x-6">
           {navItems.map((item) => (
@@ -34,16 +34,14 @@ export function Navbar() {
               <ScrambleText text={item.name} settings={{ speed: 1.2 }} />
             </Link>
           ))}
-          <a 
-            href="https://airtable.com/app3pQwTajrXxwY9B/pag7zTCGlhIigg7XL/form" 
-            className="ml-4">
+          <Link href="/contact" className="ml-4">
             <Button 
               variant="secondary" 
               className="bg-white/10 hover:bg-white/20 text-white border-0 transition-transform hover:scale-105"
             >
-              <ScrambleText text="Become an LP" settings={{ speed: 1.2 }} />
+              <ScrambleText text="Contact" settings={{ speed: 1.2 }} />
             </Button>
-          </a>
+          </Link>
         </div>
       </div>
     </motion.nav>

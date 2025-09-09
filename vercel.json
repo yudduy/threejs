@@ -35,6 +35,8 @@
   "env": {
     "SENDGRID_API_KEY": "@sendgrid_api_key",
     "SENDGRID_VERIFIED_SENDER": "@sendgrid_verified_sender",
+    "CONTACT_EMAIL": "@contact_email",
+    "CONTACT_SUBJECT": "@contact_subject",
     "FRONTEND_URL": "@frontend_url"
   }
 }
