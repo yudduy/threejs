@@ -7,14 +7,14 @@ const inter = Inter({ subsets: ['latin'] })
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "name": "Your Company Name",
-  "description": "Beautiful Three.js website template with modern animations",
-  "url": "https://your-domain.com", 
-  "logo": "https://your-domain.com/logo.png",
+  "name": process.env.NEXT_PUBLIC_SITE_NAME || "Your Company Name",
+  "description": process.env.NEXT_PUBLIC_SITE_DESCRIPTION || "Beautiful Three.js website template with modern animations",
+  "url": process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || "https://your-domain.com", 
+  "logo": process.env.NEXT_PUBLIC_SITE_LOGO || `${process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') || "https://your-domain.com"}/logo.png`,
   "sameAs": [
-    "https://linkedin.com/company/your-company",
-    "https://twitter.com/yourcompany"
-  ]
+    process.env.NEXT_PUBLIC_LINKEDIN_URL || "https://linkedin.com/company/your-company",
+    process.env.NEXT_PUBLIC_TWITTER_URL || "https://twitter.com/yourcompany"
+  ].filter(url => url && !url.includes('your-'))
 }
 
 export const metadata: Metadata = {
