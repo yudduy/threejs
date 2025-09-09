@@ -1,13 +1,13 @@
 import { createTextGeometry } from '../textGeometry';
 import * as THREE from 'three';
 
-export type ShapeType = 'galaxy' | 'blockchain' | 'neuralNetwork' | 'quantum' | 'AXESS' | 's' | 'infinity';
+export type ShapeType = 'galaxy' | 'blockchain' | 'neuralNetwork' | 'quantum' | 'DUY' | 'n' | 'infinity';
 
-export const shapes: ShapeType[] = ['galaxy', 'blockchain', 'neuralNetwork', 'quantum', 's', 'infinity'];
+export const shapes: ShapeType[] = ['galaxy', 'blockchain', 'neuralNetwork', 'quantum', 'n', 'infinity'];
 
 export const generateShapes: Record<ShapeType, (particleCount: number, randomValues: Float32Array) => Float32Array> = {
-    AXESS: (particleCount: number, randomValues: Float32Array): Float32Array => {
-        const positions = createTextGeometry('AXESS', particleCount);
+    DUY: (particleCount: number, randomValues: Float32Array): Float32Array => {
+        const positions = createTextGeometry('DUY', particleCount);
         
         // Scale the text positions without adding circular formation
         for (let i = 0; i < particleCount; i++) {
@@ -102,24 +102,30 @@ export const generateShapes: Record<ShapeType, (particleCount: number, randomVal
         return positions;
     },
 
-    s: (particleCount: number, randomValues: Float32Array) => {
+    n: (particleCount: number, randomValues: Float32Array) => {
         const positions = new Float32Array(particleCount * 3);
-        const radius = 300;
-        const halfCount = Math.floor(particleCount / 2);
+        const height = 400;
+        const width = 300;
+        const thirdCount = Math.floor(particleCount / 3);
         
         for (let i = 0; i < particleCount; i++) {
-            let t = i / particleCount;
             let x = 0, y = 0, z = 0;
         
-            if (i < halfCount) {
-                t = (i / halfCount) * Math.PI * 1.5; // Adjusted scale for half the particle count
-                x = Math.cos(t) * radius * 0.4;
-                y = Math.sin(t) * radius * 0.4 + radius * 0.4; // Slightly shifted up
-        
+            if (i < thirdCount) {
+                // Left vertical line
+                const t = (i / thirdCount);
+                x = -width / 2;
+                y = (t * height) - height / 2;
+            } else if (i < thirdCount * 2) {
+                // Diagonal line from bottom-left to top-right
+                const t = ((i - thirdCount) / thirdCount);
+                x = (t * width) - width / 2;
+                y = (t * height) - height / 2;
             } else {
-                t = ((i - halfCount) / halfCount) * Math.PI * 1.5 + Math.PI;
-                x = Math.cos(t) * radius * 0.4;
-                y = Math.sin(t) * radius * 0.4 - radius * 0.4; // Slightly shifted down
+                // Right vertical line
+                const t = ((i - thirdCount * 2) / (particleCount - thirdCount * 2));
+                x = width / 2;
+                y = (t * height) - height / 2;
             }
         
             z = (randomValues[i * 3] - 0.5) * 50;

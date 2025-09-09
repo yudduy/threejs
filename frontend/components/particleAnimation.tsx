@@ -18,7 +18,7 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null)
   const geometryRef = useRef<THREE.BufferGeometry | null>(null)
   const shapeIndex = useRef(0)
-  const currentShape = useRef<ShapeType>('AXESS')
+  const currentShape = useRef<ShapeType>('DUY')
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -55,7 +55,7 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
     const randomValues = new Float32Array(particleCount * 13).map(() => Math.random())
 
     // Generate text positions with original scaling
-    const textGeometry = createTextGeometry('AXESS', particleCount)
+    const textGeometry = createTextGeometry('DUY', particleCount)
     for (let i = 0; i < particleCount; i++) {
       textPositions[i * 3] = textGeometry[i * 3] * 9
       textPositions[i * 3 + 1] = textGeometry[i * 3 + 1] * 9
@@ -116,7 +116,7 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
       }
     })
 
-    // Animate to AXESS text formation
+    // Animate to DUY text formation
     tl.to(positions, {
       duration: 2,
       ease: 'power2.inOut',
@@ -146,17 +146,17 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
         geometry.attributes.position.needsUpdate = true
       },
       onComplete: () => {
-        // Transition to S shape
-        const sPositions = generateShapes.s(particleCount, randomValues)
+        // Transition to N shape
+        const nPositions = generateShapes.n(particleCount, randomValues)
         gsap.to(positions, {
           duration: 2,
           ease: 'power2.inOut',
           onUpdate: () => {
             for (let i = 0; i < particleCount; i++) {
               const ix = i * 3
-              positions[ix] += (sPositions[ix] - positions[ix]) * 0.1
-              positions[ix + 1] += (sPositions[ix + 1] - positions[ix + 1]) * 0.1
-              positions[ix + 2] += (sPositions[ix + 2] - positions[ix + 2]) * 0.1
+              positions[ix] += (nPositions[ix] - positions[ix]) * 0.1
+              positions[ix + 1] += (nPositions[ix + 1] - positions[ix + 1]) * 0.1
+              positions[ix + 2] += (nPositions[ix + 2] - positions[ix + 2]) * 0.1
             }
             geometry.attributes.position.needsUpdate = true
           },
@@ -243,7 +243,7 @@ function RoseUniverse({ onAnimationComplete }: RoseUniverseProps) {
         const dy = positions[ix + 1] - (mousePosition.current.y * 100)
         const dist = Math.sqrt(dx * dx + dy * dy)
         
-        const isTextFormation = currentShape.current === 'AXESS'
+        const isTextFormation = currentShape.current === 'DUY'
         const effectMultiplier = isTextFormation ? 0.3 : 1
         
         const repelStrength = Math.max(0, 1 - dist / 100) * 4 * effectMultiplier
