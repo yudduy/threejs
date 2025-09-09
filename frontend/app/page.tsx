@@ -32,7 +32,7 @@ export default function Home() {
           <Navbar />
           <div className="fixed inset-0 flex flex-col items-center justify-center z-10">
             <div className="text-center">
-              <TypingAnimation text="Welcome to Axess Capital" />
+              <TypingAnimation text="Welcome to Your Vision" />
               <motion.div
                 className="flex flex-col items-center gap-8"
                 initial={{ opacity: 0, y: 20 }}
@@ -40,7 +40,7 @@ export default function Home() {
                 transition={{ delay: 1 }}
               >
                 <ScrambleText 
-                  text="Stanford's exclusive venture capital fund. Coming Soon." 
+                  text="Beautiful Three.js website template. Ready to customize." 
                   settings={{ speed: 1.5 }} 
                   className="mt-4 text-lg font-semibold text-gray-400" 
                 />
@@ -55,7 +55,7 @@ export default function Home() {
                     onClick={() => setShowContactForm(true)}
                   >
                     <ScrambleText 
-                      text="Curious? Contact Us!" 
+                      text="Get in Touch!" 
                       settings={{ speed: 1.2 }} 
                     />
                   </motion.div>

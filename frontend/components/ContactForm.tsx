@@ -64,7 +64,7 @@ export function ContactForm({ onClose }: ContactFormProps) {
       const errorMessage = error instanceof Error ? error.message : 'Failed to send message'
       setSubmitStatus({ 
         type: 'error', 
-        message: 'Something went wrong. Please contact us at duy@axess.vc'
+        message: 'Something went wrong. Please try again or contact us directly.'
       })
     } finally {
       setLoading(false)

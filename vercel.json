@@ -1,0 +1,40 @@
+{
+  "version": 2,
+  "buildCommand": "cd frontend && npm run build",
+  "installCommand": "cd frontend && npm install",
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/next"
+    },
+    {
+      "src": "backend/api/**/*.ts",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/contact",
+      "dest": "backend/api/contact.ts",
+      "methods": ["POST", "OPTIONS"]
+    },
+    {
+      "src": "/api/health",
+      "dest": "backend/api/index.ts",
+      "methods": ["GET"]
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/api/$1"
+    }
+  ],
+  "env": {
+    "SENDGRID_API_KEY": "@sendgrid_api_key",
+    "SENDGRID_VERIFIED_SENDER": "@sendgrid_verified_sender",
+    "FRONTEND_URL": "@frontend_url"
+  }
+}
