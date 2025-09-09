@@ -42,9 +42,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     const msg = {
-      to: 'duy@axess.vc',
+      to: process.env.CONTACT_EMAIL || process.env.SENDGRID_VERIFIED_SENDER!,
       from: process.env.SENDGRID_VERIFIED_SENDER!,
-      subject: 'New Contact Form Submission - Axess Capital',
+      subject: process.env.CONTACT_SUBJECT || 'New Contact Form Submission',
       text: `
         Name: ${name || 'Not provided'}
         Email: ${email}
@@ -66,7 +66,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   } catch (error) {
     console.error('SendGrid Error:', error);
     return res.status(500).json({ 
-      error: 'Failed to send message. Please contact us at duy@axess.vc' 
+      error: `Failed to send message. Please contact us at ${process.env.CONTACT_EMAIL || process.env.SENDGRID_VERIFIED_SENDER}` 
     });
   }
 } 
