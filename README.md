@@ -2,6 +2,10 @@
 
 A beautiful, modern website template built with Three.js, Next.js, and Tailwind CSS. Features stunning particle animations, smooth transitions, and a working contact form powered by SendGrid.
 
+## 🌟 [**Live Demo**](https://threejs-website-template-demo.vercel.app)
+
+See the template in action before you use it! The demo includes all animations and a working contact form (in demo mode).
+
 ## ✨ Features
 
 - **Interactive 3D Animations**: Beautiful particle systems and geometric shapes using Three.js
@@ -24,8 +28,8 @@ A beautiful, modern website template built with Three.js, Next.js, and Tailwind 
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yudduy/three.js-website-template.git
-   cd three.js-website-template
+   git clone https://github.com/yudduy/three.js-web.git
+   cd three.js-web
    ```
 
 2. **Install dependencies**
@@ -148,7 +152,15 @@ three.js-website-template/
 
 This template is optimized for deployment on Vercel, but can be deployed anywhere that supports Next.js.
 
-### Deploying to Vercel
+### Quick Deploy (Demo Mode)
+
+For a quick demo without SendGrid setup:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyudduy%2Fthree.js-website-template&env=DEMO_MODE&envDescription=Set%20to%20true%20for%20demo%20mode&envLink=https%3A%2F%2Fgithub.com%2Fyudduy%2Fthree.js-website-template%23demo-mode)
+
+Just set `DEMO_MODE=true` and the contact form will simulate sending emails without requiring SendGrid.
+
+### Full Production Deployment
 
 1. **Connect your repository** to Vercel
 2. **Set environment variables** in your Vercel dashboard:
@@ -156,6 +168,7 @@ This template is optimized for deployment on Vercel, but can be deployed anywher
    - `SENDGRID_VERIFIED_SENDER` 
    - `CONTACT_EMAIL`
    - `FRONTEND_URL`
+   - `DEMO_MODE=false` (or leave unset)
 3. **Deploy** - Vercel will automatically build and deploy your site
 
 ### Other Platforms

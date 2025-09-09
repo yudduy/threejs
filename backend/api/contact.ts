@@ -41,6 +41,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       });
     }
 
+    // Demo mode - simulate email sending without actual SendGrid
+    if (process.env.DEMO_MODE === 'true') {
+      console.log('📧 DEMO MODE - Contact form submission received:');
+      console.log('Name:', name || 'Not provided');
+      console.log('Email:', email);
+      console.log('Message:', message);
+      
+      // Simulate processing delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      return res.status(200).json({ 
+        message: 'Message sent successfully! (Demo mode - no actual email sent)' 
+      });
+    }
+
+    // Production mode - actual SendGrid sending
     const msg = {
       to: process.env.CONTACT_EMAIL || process.env.SENDGRID_VERIFIED_SENDER!,
       from: process.env.SENDGRID_VERIFIED_SENDER!,
