@@ -1,211 +1,117 @@
-# Three.js Website Template
+# Three.js Particle Animation Website
 
-A beautiful, modern website template built with Three.js, Next.js, and Tailwind CSS. Features stunning particle animations, smooth transitions, and a working contact form powered by SendGrid.
+A personal web framework I built featuring interactive particle animations that spell out text and morph between geometric shapes. Built with Three.js, Next.js, and TypeScript.
 
-## 🌟 [**Live Demo**](https://threejs-website-template-demo.vercel.app)
+## 🌟 **[Live Demo → threejs.duynguy.com](https://threejs.duynguy.com)**
 
-See the template in action before you use it! The demo includes all animations and a working contact form (in demo mode).
+## What This Is
 
-## ✨ Features
+I created this as a portfolio piece and framework for building modern websites with eye-catching 3D animations. The particle system starts by forming letters, then transitions through various shapes like spirals, blockchain networks, and neural networks.
 
-- **Interactive 3D Animations**: Beautiful particle systems and geometric shapes using Three.js
-- **Modern Design**: Clean, minimalist interface with smooth animations and hover effects
-- **Responsive Layout**: Works perfectly on desktop, tablet, and mobile devices
-- **Contact Form**: Fully functional contact form with SendGrid email integration
-- **Performance Optimized**: Server-side rendering with Next.js for fast loading times
-- **Type Safe**: Built with TypeScript for better development experience
-- **Easy Customization**: Well-structured code that's easy to modify and extend
+The codebase is set up as a template so you can easily customize the text, shapes, and overall design for your own projects.
 
-## 🚀 Quick Start
+## Key Features
 
-### Prerequisites
+- **Interactive Particle System** - Thousands of particles that form text and transition between shapes
+- **Responsive Design** - Works on desktop, tablet, and mobile
+- **Contact Form** - Integrated with SendGrid for email functionality
+- **TypeScript** - Fully typed for better development experience
+- **Easy Customization** - Change text, colors, and animations with simple config changes
 
-- Node.js 18+ 
-- npm or yarn
-- SendGrid account (for contact form functionality)
+## Getting Started
 
-### Installation
-
-1. **Clone the repository**
    ```bash
+# Clone the repo
    git clone https://github.com/yudduy/three.js-web.git
    cd three.js-web
-   ```
 
-2. **Install dependencies**
-   ```bash
-   # Frontend
-   cd frontend
-   npm install
-   
-   # Backend
-   cd ../backend  
-   npm install
-   ```
+# Install dependencies
+cd frontend && npm install
+cd ../backend && npm install
 
-3. **Set up environment variables**
-   
-   For Vercel deployment, you'll need to set these environment variables in your Vercel dashboard:
-   - `SENDGRID_API_KEY`: Your SendGrid API key
-   - `SENDGRID_VERIFIED_SENDER`: Your verified sender email address
-   - `CONTACT_EMAIL`: Email address where contact form submissions will be sent
-   - `FRONTEND_URL`: Your website's URL (e.g., https://yourdomain.com)
-
-4. **Run the development server**
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-
-   Open [http://localhost:3000](http://localhost:3000) to see your website.
-
-## 📧 Setting Up SendGrid
-
-1. **Create a SendGrid account** at [sendgrid.com](https://sendgrid.com)
-
-2. **Generate an API key**:
-   - Go to Settings > API Keys
-   - Create a new API key with "Full Access" permissions
-   - Copy the API key for later use
-
-3. **Verify your sender email**:
-   - Go to Settings > Sender Authentication
-   - Verify a single sender email address
-   - This will be used as the "from" address for contact form emails
-
-4. **Configure environment variables** in your deployment platform with the values from steps 2 and 3
-
-## 🎨 Customization
-
-### Changing the Content
-
-**Main Headline and Text**:
-Edit `frontend/app/page.tsx`:
-```tsx
-<TypingAnimation text="Your Custom Headline" />
-<ScrambleText 
-  text="Your custom description text here." 
-  settings={{ speed: 1.5 }} 
-  className="mt-4 text-lg font-semibold text-gray-400" 
-/>
+# Start development server
+cd frontend && npm run dev
 ```
 
-**SEO and Metadata**:
-Update `frontend/app/layout.tsx`:
-```tsx
-export const metadata: Metadata = {
-  title: 'Your Site Title',
-  description: 'Your site description',
-  // ... other metadata
+Open http://localhost:3000 to see it running locally.
+
+## Customizing the Particle Text
+
+The main particle animation is in `frontend/components/particleAnimation.tsx`. To change what text it spells out:
+
+1. Find this line: `const textGeometry = createTextGeometry('DUY', particleCount)`
+2. Replace 'DUY' with your text
+3. Update the shape type references from 'DUY' to your text
+
+The text generation uses HTML5 Canvas to convert text into particle positions, so it works with any font and most characters.
+
+## Adding New Shapes
+
+Particle shapes are defined in `frontend/components/shapes/particleShapes.ts`. Each shape is a function that returns an array of 3D coordinates:
+
+```typescript
+myShape: (particleCount: number, randomValues: Float32Array) => {
+  const positions = new Float32Array(particleCount * 3);
+  // Your math to position particles
+  return positions;
 }
 ```
 
-### Customizing the Animations
+## Email Setup
 
-**Particle Colors and Behavior**:
-Modify `frontend/components/particleAnimation.tsx` to change:
-- Particle colors and materials
-- Animation speed and patterns  
-- Camera movements and transitions
+The contact form uses SendGrid. You'll need:
 
-**Page Transitions**:
-Edit the Framer Motion animations in `frontend/app/page.tsx` to customize:
-- Fade-in timing
-- Hover effects
-- Component transitions
-
-### Styling Changes
-
-**Colors and Typography**:
-The project uses Tailwind CSS. Update `frontend/tailwind.config.js` to customize:
-- Color palette
-- Fonts
-- Spacing and sizing
-
-**Layout and Components**:
-All components are in `frontend/components/` and can be easily modified or replaced.
-
-## 🏗️ Project Structure
-
-```
-three.js-website-template/
-├── frontend/                 # Next.js frontend application
-│   ├── app/                 # Next.js 13+ app directory
-│   │   ├── page.tsx         # Main homepage
-│   │   ├── layout.tsx       # Root layout and metadata
-│   │   └── global.css       # Global styles
-│   ├── components/          # Reusable UI components
-│   │   ├── ContactForm.tsx  # Contact form modal
-│   │   ├── navbar.tsx       # Navigation component
-│   │   ├── particleAnimation.tsx # Three.js animations
-│   │   └── ui/              # UI component library
-│   └── package.json         # Frontend dependencies
-├── backend/                 # Serverless backend functions
-│   ├── api/                 # API endpoints
-│   │   └── contact.ts       # Contact form handler
-│   └── package.json         # Backend dependencies
-├── vercel.json              # Vercel deployment configuration
-└── README.md               # This file
-```
-
-## 🚀 Deployment
-
-This template is optimized for deployment on Vercel, but can be deployed anywhere that supports Next.js.
-
-### Quick Deploy (Demo Mode)
-
-For a quick demo without SendGrid setup:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fyudduy%2Fthree.js-website-template&env=DEMO_MODE&envDescription=Set%20to%20true%20for%20demo%20mode&envLink=https%3A%2F%2Fgithub.com%2Fyudduy%2Fthree.js-website-template%23demo-mode)
-
-Just set `DEMO_MODE=true` and the contact form will simulate sending emails without requiring SendGrid.
-
-### Full Production Deployment
-
-1. **Connect your repository** to Vercel
-2. **Set environment variables** in your Vercel dashboard:
+1. SendGrid account and API key
+2. Environment variables set in your deployment:
    - `SENDGRID_API_KEY`
    - `SENDGRID_VERIFIED_SENDER` 
    - `CONTACT_EMAIL`
    - `FRONTEND_URL`
-   - `DEMO_MODE=false` (or leave unset)
-3. **Deploy** - Vercel will automatically build and deploy your site
 
-### Other Platforms
+For testing without email, set `DEMO_MODE=true`.
 
-For other platforms like Netlify, AWS, or traditional hosting:
-- Build the frontend: `cd frontend && npm run build`
-- The backend API routes may need to be adapted depending on your hosting platform
-- Ensure environment variables are properly configured
+## Deployment
 
-## 🛠️ Built With
+Optimized for Vercel, but works anywhere that supports Next.js:
 
-- **[Next.js](https://nextjs.org/)** - React framework with server-side rendering
-- **[Three.js](https://threejs.org/)** - 3D graphics library for particle animations
-- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
-- **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[Framer Motion](https://www.framer.com/motion/)** - Animation library for React
-- **[SendGrid](https://sendgrid.com/)** - Email delivery service
-- **[Vercel](https://vercel.com/)** - Deployment and hosting platform
+```bash
+# Build frontend
+cd frontend && npm run build
 
-## 📝 License
+# Deploy to your platform of choice
+```
 
-This project is open source and available under the [MIT License](LICENSE).
+The `vercel.json` config handles the backend API routes automatically on Vercel.
 
-## 🤝 Contributing
+## File Structure
 
-Contributions are welcome! Feel free to:
-- Report bugs
-- Suggest new features  
-- Submit pull requests
-- Improve documentation
+```
+├── frontend/                 # Next.js app
+│   ├── app/                 # Pages and layout
+│   ├── components/          # React components
+│   │   ├── particleAnimation.tsx  # Main Three.js animation
+│   │   ├── shapes/          # Particle shape definitions
+│   │   └── ui/              # UI components
+├── backend/                 # API functions
+│   └── api/                 # Contact form endpoint
+└── vercel.json              # Deployment config
+```
 
-## ⭐ Support
+## Built With
 
-If you found this template helpful, please consider giving it a star on GitHub!
+- **Three.js** - 3D graphics and particle systems
+- **Next.js** - React framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **SendGrid** - Email delivery
+- **GSAP** - Animation tweening
 
----
+## License
 
-**Happy coding!** 🚀
+MIT License - feel free to use this for your own projects.
 
-*This template was created to help developers quickly build beautiful, modern websites with Three.js animations and all the essential features needed for a professional web presence.*
+## Questions?
+
+This started as a personal project and grew into something I thought others might find useful. If you run into issues or have questions about the particle system, feel free to open an issue.
+
+The particle animation code is probably the most interesting part - I spent a lot of time getting the text-to-particle conversion and shape morphing to feel smooth and natural.
